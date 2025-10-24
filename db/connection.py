@@ -72,9 +72,7 @@ class DatabaseConnection:
             logger.error(f"Failed to initialize database schema: {e}")
             raise
 
-    def execute_query(
-        self, query: str, parameters: tuple | None = None
-    ) -> duckdb.DuckDBPyResult:
+    def execute_query(self, query: str, parameters: tuple | None = None):
         """Execute a query with optional parameters."""
         try:
             conn = self.connect()

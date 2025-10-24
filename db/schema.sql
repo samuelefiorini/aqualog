@@ -3,7 +3,7 @@
 
 -- Members table - stores information about freediving society members
 CREATE TABLE IF NOT EXISTS members (
-    id INTEGER PRIMARY KEY,
+    id INTEGER,
     name VARCHAR(100) NOT NULL,
     surname VARCHAR(100) NOT NULL,
     date_of_birth DATE NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS members (
 
 -- Cooper tests table - stores 12-minute Cooper test results with diving/surface cycles
 CREATE TABLE IF NOT EXISTS cooper_tests (
-    id INTEGER PRIMARY KEY,
+    id INTEGER,
     member_id INTEGER NOT NULL,
     test_date DATE NOT NULL,
     diving_times TIME[] NOT NULL,     -- Array of diving times for each cycle
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS cooper_tests (
 
 -- Indoor trials table - stores indoor training session results
 CREATE TABLE IF NOT EXISTS indoor_trials (
-    id INTEGER PRIMARY KEY,
+    id INTEGER,
     member_id INTEGER NOT NULL,
     trial_date DATE NOT NULL,
     location VARCHAR(255),

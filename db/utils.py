@@ -239,6 +239,8 @@ def get_detailed_stats() -> dict[str, Any]:
         }
 
         # Basic statistics
+        from .queries import get_database_stats
+
         basic_stats = get_database_stats()
         stats["basic_stats"] = {
             "total_members": basic_stats.total_members,

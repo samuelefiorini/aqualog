@@ -263,17 +263,26 @@ def insert_member(
     """Insert a new member and return the member ID."""
     try:
         db = get_db_connection()
+        # Get next ID
+        max_id_result = db.fetch_one("SELECT COALESCE(MAX(id), 0) + 1 FROM members")
+        member_id = max_id_result[0]
+
         query = """
-        INSERT INTO members (name, surname, date_of_birth, contact_info, membership_start_date)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO members (id, name, surname, date_of_birth, contact_info, membership_start_date)
+        VALUES (?, ?, ?, ?, ?, ?)
         """
 
         db.execute_query(
-            query, (name, surname, date_of_birth, contact_info, membership_start_date)
+            query,
+            (
+                member_id,
+                name,
+                surname,
+                date_of_birth,
+                contact_info,
+                membership_start_date,
+            ),
         )
-
-        # Get the last inserted ID
-        member_id = db.fetch_one("SELECT last_insert_rowid()")[0]
 
         logger.info(f"Inserted new member: {name} {surname} (ID: {member_id})")
         return member_id
@@ -294,15 +303,22 @@ def insert_cooper_test(
     """Insert a new Cooper test and return the test ID."""
     try:
         db = get_db_connection()
+        # Get next ID
+        max_id_result = db.fetch_one(
+            "SELECT COALESCE(MAX(id), 0) + 1 FROM cooper_tests"
+        )
+        test_id = max_id_result[0]
+
         query = """
-        INSERT INTO cooper_tests (member_id, test_date, diving_times, surface_times,
+        INSERT INTO cooper_tests (id, member_id, test_date, diving_times, surface_times,
                                 pool_length_meters, notes)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """
 
         db.execute_query(
             query,
             (
+                test_id,
                 member_id,
                 test_date,
                 diving_times,
@@ -311,9 +327,6 @@ def insert_cooper_test(
                 notes,
             ),
         )
-
-        # Get the last inserted ID
-        test_id = db.fetch_one("SELECT last_insert_rowid()")[0]
 
         logger.info(f"Inserted Cooper test for member {member_id} (Test ID: {test_id})")
         return test_id
@@ -334,15 +347,22 @@ def insert_indoor_trial(
     """Insert a new indoor trial and return the trial ID."""
     try:
         db = get_db_connection()
+        # Get next ID
+        max_id_result = db.fetch_one(
+            "SELECT COALESCE(MAX(id), 0) + 1 FROM indoor_trials"
+        )
+        trial_id = max_id_result[0]
+
         query = """
-        INSERT INTO indoor_trials (member_id, trial_date, location, distance_meters,
+        INSERT INTO indoor_trials (id, member_id, trial_date, location, distance_meters,
                                  time_seconds, pool_length_meters)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """
 
         db.execute_query(
             query,
             (
+                trial_id,
                 member_id,
                 trial_date,
                 location,
@@ -351,9 +371,6 @@ def insert_indoor_trial(
                 pool_length_meters,
             ),
         )
-
-        # Get the last inserted ID
-        trial_id = db.fetch_one("SELECT last_insert_rowid()")[0]
 
         logger.info(
             f"Inserted indoor trial for member {member_id} (Trial ID: {trial_id})"

@@ -27,7 +27,10 @@
   - Add database utility functions for stats and initialization
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7_
 
-- [ ] 3. Build data population CLI script
+- [x] 3. Build data population CLI script
+
+
+
   - Create Typer-based CLI application with configurable parameters
   - Implement Faker data generators for Italian freediving members
   - Generate realistic Cooper test data with TIME arrays for diving/surface cycles
