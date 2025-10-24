@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Freediving Management System is designed as a modern, containerized web application using Streamlit for the frontend and DuckDB for data persistence. The system follows a clean architecture pattern with clear separation of concerns between presentation, business logic, and data access layers. The application will be structured as a multi-page Streamlit app with modular components for authentication, data visualization, and database operations.
+Aqualog is designed as a modern, containerized web application using Streamlit for the frontend and DuckDB for data persistence. The system follows a clean architecture pattern with clear separation of concerns between presentation, business logic, and data access layers. The application will be structured as a multi-page Streamlit app with modular components for authentication, data visualization, and database operations.
 
 ## Architecture
 
@@ -220,7 +220,7 @@ from app.pages import landing, members, cooper_tests, indoor_trials
 
 # Page configuration
 st.set_page_config(
-    page_title="Freediving Management System",
+    page_title="Aqualog",
     page_icon=":material/pool:",
     layout="wide"
 )
@@ -483,7 +483,7 @@ import os
 
 @dataclass
 class AppConfig:
-    database_path: str = "data/freedive.duckdb"
+    database_path: str = "data/aqualog.duckdb"
     streamlit_port: int = 8501
     log_level: str = "INFO"
     
@@ -558,8 +558,8 @@ uv run python scripts/populate_db.py clear-database
 
 ### Production Deployment
 
-1. **Container Build**: `docker build -t freedive_app .`
-2. **Container Run**: `docker run -p 8501:8501 -v $(pwd)/data:/app/data freedive_app`
+1. **Container Build**: `docker build -t aqualog .`
+2. **Container Run**: `docker run -p 8501:8501 -v $(pwd)/data:/app/data aqualog`
 3. **Data Persistence**: Mount volume for DuckDB file
 4. **Health Checks**: Container health monitoring
 5. **Backup Strategy**: Regular DuckDB file backups

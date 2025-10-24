@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Freediving Management System is an internal web application for a small Italian freediving society to manage and visualize training and test data. The system will provide a clean, production-ready solution using Streamlit for the web interface, DuckDB for data storage, and synthetic data generation capabilities using Faker. The application will serve as a comprehensive tool for tracking member information, Cooper test results, and indoor training trials with data visualization capabilities.
+Aqualog is an internal web application for a small Italian freediving society to manage and visualize training and test data. The system will provide a clean, production-ready solution using Streamlit for the web interface, DuckDB for data storage, and synthetic data generation capabilities using Faker. The application will serve as a comprehensive tool for tracking member information, Cooper test results, and indoor training trials with data visualization capabilities.
 
 ## Requirements
 
