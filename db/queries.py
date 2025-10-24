@@ -3,20 +3,20 @@ Centralized query functions for Aqualog database operations.
 Provides type-safe database access with proper error handling.
 """
 
-from typing import List, Optional, Tuple
-from datetime import date, datetime, time
+from datetime import date, time
+
 from loguru import logger
 
 from .connection import get_db_connection
-from .models import Member, CooperTest, IndoorTrial, DatabaseStats, PerformanceTrend
+from .models import CooperTest, DatabaseStats, IndoorTrial, Member, PerformanceTrend
 
 
-def get_all_members() -> List[Member]:
+def get_all_members() -> list[Member]:
     """Retrieve all members from the database."""
     try:
         db = get_db_connection()
         query = """
-        SELECT id, name, surname, date_of_birth, contact_info, 
+        SELECT id, name, surname, date_of_birth, contact_info,
                membership_start_date, created_at
         FROM members
         ORDER BY surname, name
@@ -45,12 +45,12 @@ def get_all_members() -> List[Member]:
         return []
 
 
-def get_member_by_id(member_id: int) -> Optional[Member]:
+def get_member_by_id(member_id: int) -> Member | None:
     """Retrieve a specific member by ID."""
     try:
         db = get_db_connection()
         query = """
-        SELECT id, name, surname, date_of_birth, contact_info, 
+        SELECT id, name, surname, date_of_birth, contact_info,
                membership_start_date, created_at
         FROM members
         WHERE id = ?
@@ -74,7 +74,7 @@ def get_member_by_id(member_id: int) -> Optional[Member]:
         return None
 
 
-def get_all_cooper_tests() -> List[CooperTest]:
+def get_all_cooper_tests() -> list[CooperTest]:
     """Retrieve all Cooper tests from the database."""
     try:
         db = get_db_connection()
@@ -109,7 +109,7 @@ def get_all_cooper_tests() -> List[CooperTest]:
         return []
 
 
-def get_cooper_tests_by_member(member_id: int) -> List[CooperTest]:
+def get_cooper_tests_by_member(member_id: int) -> list[CooperTest]:
     """Retrieve Cooper tests for a specific member."""
     try:
         db = get_db_connection()
@@ -145,7 +145,7 @@ def get_cooper_tests_by_member(member_id: int) -> List[CooperTest]:
         return []
 
 
-def get_all_indoor_trials() -> List[IndoorTrial]:
+def get_all_indoor_trials() -> list[IndoorTrial]:
     """Retrieve all indoor trials from the database."""
     try:
         db = get_db_connection()
@@ -180,7 +180,7 @@ def get_all_indoor_trials() -> List[IndoorTrial]:
         return []
 
 
-def get_indoor_trials_by_member(member_id: int) -> List[IndoorTrial]:
+def get_indoor_trials_by_member(member_id: int) -> list[IndoorTrial]:
     """Retrieve indoor trials for a specific member."""
     try:
         db = get_db_connection()
@@ -257,7 +257,7 @@ def insert_member(
     name: str,
     surname: str,
     date_of_birth: date,
-    contact_info: Optional[str],
+    contact_info: str | None,
     membership_start_date: date,
 ) -> int:
     """Insert a new member and return the member ID."""
@@ -286,16 +286,16 @@ def insert_member(
 def insert_cooper_test(
     member_id: int,
     test_date: date,
-    diving_times: List[time],
-    surface_times: List[time],
+    diving_times: list[time],
+    surface_times: list[time],
     pool_length_meters: int,
-    notes: Optional[str] = None,
+    notes: str | None = None,
 ) -> int:
     """Insert a new Cooper test and return the test ID."""
     try:
         db = get_db_connection()
         query = """
-        INSERT INTO cooper_tests (member_id, test_date, diving_times, surface_times, 
+        INSERT INTO cooper_tests (member_id, test_date, diving_times, surface_times,
                                 pool_length_meters, notes)
         VALUES (?, ?, ?, ?, ?, ?)
         """
@@ -326,9 +326,9 @@ def insert_cooper_test(
 def insert_indoor_trial(
     member_id: int,
     trial_date: date,
-    location: Optional[str],
+    location: str | None,
     distance_meters: int,
-    time_seconds: Optional[int],
+    time_seconds: int | None,
     pool_length_meters: int,
 ) -> int:
     """Insert a new indoor trial and return the trial ID."""
@@ -366,15 +366,15 @@ def insert_indoor_trial(
 
 
 def get_performance_trends_cooper(
-    member_id: Optional[int] = None,
-) -> List[PerformanceTrend]:
+    member_id: int | None = None,
+) -> list[PerformanceTrend]:
     """Get Cooper test performance trends for visualization."""
     try:
         db = get_db_connection()
 
         if member_id:
             query = """
-            SELECT m.name || ' ' || m.surname as member_name, 
+            SELECT m.name || ' ' || m.surname as member_name,
                    ct.test_date, ct.diving_times, ct.surface_times
             FROM cooper_tests ct
             JOIN members m ON ct.member_id = m.id
@@ -384,7 +384,7 @@ def get_performance_trends_cooper(
             rows = db.fetch_all(query, (member_id,))
         else:
             query = """
-            SELECT m.name || ' ' || m.surname as member_name, 
+            SELECT m.name || ' ' || m.surname as member_name,
                    ct.test_date, ct.diving_times, ct.surface_times
             FROM cooper_tests ct
             JOIN members m ON ct.member_id = m.id
@@ -470,15 +470,15 @@ def get_performance_trends_cooper(
 
 
 def get_performance_trends_trials(
-    member_id: Optional[int] = None,
-) -> List[PerformanceTrend]:
+    member_id: int | None = None,
+) -> list[PerformanceTrend]:
     """Get indoor trial performance trends for visualization."""
     try:
         db = get_db_connection()
 
         if member_id:
             query = """
-            SELECT m.name || ' ' || m.surname as member_name, 
+            SELECT m.name || ' ' || m.surname as member_name,
                    it.trial_date, it.distance_meters, it.time_seconds
             FROM indoor_trials it
             JOIN members m ON it.member_id = m.id
@@ -488,7 +488,7 @@ def get_performance_trends_trials(
             rows = db.fetch_all(query, (member_id,))
         else:
             query = """
-            SELECT m.name || ' ' || m.surname as member_name, 
+            SELECT m.name || ' ' || m.surname as member_name,
                    it.trial_date, it.distance_meters, it.time_seconds
             FROM indoor_trials it
             JOIN members m ON it.member_id = m.id

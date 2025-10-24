@@ -3,11 +3,12 @@ DuckDB connection management with singleton pattern for Aqualog.
 Provides centralized database connection handling with automatic initialization.
 """
 
-import duckdb
+import threading
 from pathlib import Path
 from typing import Optional
+
+import duckdb
 from loguru import logger
-import threading
 
 
 class DatabaseConnection:
@@ -29,7 +30,7 @@ class DatabaseConnection:
         """Initialize the database connection if not already initialized."""
         if not getattr(self, "_initialized", False):
             self.db_path = Path(db_path)
-            self._connection: Optional[duckdb.DuckDBPyConnection] = None
+            self._connection: duckdb.DuckDBPyConnection | None = None
             self._initialized = True
             logger.info(f"DatabaseConnection initialized with path: {self.db_path}")
 
@@ -58,7 +59,7 @@ class DatabaseConnection:
         try:
             schema_path = Path(__file__).parent / "schema.sql"
             if schema_path.exists():
-                with open(schema_path, "r") as f:
+                with open(schema_path) as f:
                     schema_sql = f.read()
 
                 # Execute schema creation
@@ -72,7 +73,7 @@ class DatabaseConnection:
             raise
 
     def execute_query(
-        self, query: str, parameters: Optional[tuple] = None
+        self, query: str, parameters: tuple | None = None
     ) -> duckdb.DuckDBPyResult:
         """Execute a query with optional parameters."""
         try:
@@ -86,14 +87,12 @@ class DatabaseConnection:
             logger.error(f"Query execution failed: {query[:100]}... Error: {e}")
             raise
 
-    def fetch_all(self, query: str, parameters: Optional[tuple] = None) -> list:
+    def fetch_all(self, query: str, parameters: tuple | None = None) -> list:
         """Execute query and fetch all results."""
         result = self.execute_query(query, parameters)
         return result.fetchall()
 
-    def fetch_one(
-        self, query: str, parameters: Optional[tuple] = None
-    ) -> Optional[tuple]:
+    def fetch_one(self, query: str, parameters: tuple | None = None) -> tuple | None:
         """Execute query and fetch one result."""
         result = self.execute_query(query, parameters)
         return result.fetchone()

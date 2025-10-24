@@ -18,48 +18,48 @@ graph TB
         E[Cooper Tests Page]
         F[Indoor Trials Page]
     end
-    
+
     subgraph "Business Logic Layer"
         G[Authentication Service]
         H[Data Service]
         I[Visualization Service]
     end
-    
+
     subgraph "Data Access Layer"
         J[Database Connection]
         K[Query Manager]
         L[Data Models]
     end
-    
+
     subgraph "Data Storage"
         M[(DuckDB File)]
     end
-    
+
     subgraph "External Tools"
         N[Data Population Script]
         O[Faker Generator]
     end
-    
+
     A --> B
     A --> C
     A --> D
     A --> E
     A --> F
-    
+
     B --> G
     C --> H
     D --> H
     E --> H
     F --> H
-    
+
     G --> K
     H --> K
     I --> K
-    
+
     J --> M
     K --> J
     L --> J
-    
+
     N --> O
     N --> M
 ```
@@ -175,16 +175,16 @@ def export_schema() -> None   # Export database schema
 class DataGenerator:
     def __init__(self, faker_instance: Faker, seed: Optional[int] = None):
         """Initialize with Italian locale for realistic names"""
-        
+
     def generate_member(self) -> Member:
         """Generate realistic freediving member profile"""
-        
+
     def generate_cooper_test(self, member_id: int, pool_length: int) -> CooperTest:
         """Generate realistic Cooper test with diving/surface cycles"""
-        
+
     def generate_indoor_trial(self, member_id: int, pool_length: int) -> IndoorTrial:
         """Generate realistic indoor trial data"""
-        
+
     def generate_realistic_diving_pattern(self) -> Tuple[List[time], List[time]]:
         """Generate realistic diving and surface time patterns"""
 ```
@@ -245,7 +245,7 @@ from loguru import logger
 @st.cache_data
 def load_data() -> Any:
     """Data loading with caching"""
-    
+
 def create_visualizations(data: Any) -> None:
     """Chart and table generation"""
 
@@ -486,15 +486,15 @@ class AppConfig:
     database_path: str = "data/aqualog.duckdb"
     streamlit_port: int = 8501
     log_level: str = "INFO"
-    
+
     # Authentication settings
     auth_credentials: Dict[str, str] = None
     session_timeout_minutes: int = 60
-    
+
     # Performance settings
     cache_ttl_seconds: int = 300
     max_records_per_page: int = 100
-    
+
     def __post_init__(self):
         # Load from environment variables
         self.database_path = os.getenv("DB_PATH", self.database_path)

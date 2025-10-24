@@ -3,13 +3,12 @@ Database utility functions for Aqualog.
 Provides database management, validation, and maintenance operations.
 """
 
-from typing import Dict, Any, List, Optional
 from pathlib import Path
+from typing import Any
+
 from loguru import logger
-import json
 
 from .connection import get_db_connection
-from .models import DatabaseStats
 
 
 def initialize_database(db_path: str = "data/aqualog.duckdb") -> bool:
@@ -49,7 +48,7 @@ def clear_all_data() -> bool:
         return False
 
 
-def validate_database_integrity() -> Dict[str, Any]:
+def validate_database_integrity() -> dict[str, Any]:
     """Validate database integrity and return validation results."""
     try:
         db = get_db_connection()
@@ -79,8 +78,8 @@ def validate_database_integrity() -> Dict[str, Any]:
         # Check foreign key constraints
         # Check cooper_tests references
         orphaned_cooper = db.fetch_one("""
-            SELECT COUNT(*) FROM cooper_tests ct 
-            LEFT JOIN members m ON ct.member_id = m.id 
+            SELECT COUNT(*) FROM cooper_tests ct
+            LEFT JOIN members m ON ct.member_id = m.id
             WHERE m.id IS NULL
         """)
 
@@ -92,8 +91,8 @@ def validate_database_integrity() -> Dict[str, Any]:
 
         # Check indoor_trials references
         orphaned_trials = db.fetch_one("""
-            SELECT COUNT(*) FROM indoor_trials it 
-            LEFT JOIN members m ON it.member_id = m.id 
+            SELECT COUNT(*) FROM indoor_trials it
+            LEFT JOIN members m ON it.member_id = m.id
             WHERE m.id IS NULL
         """)
 
@@ -106,7 +105,7 @@ def validate_database_integrity() -> Dict[str, Any]:
         # Check for data quality issues
         # Members with future birth dates
         future_births = db.fetch_one("""
-            SELECT COUNT(*) FROM members 
+            SELECT COUNT(*) FROM members
             WHERE date_of_birth > CURRENT_DATE
         """)
 
@@ -117,7 +116,7 @@ def validate_database_integrity() -> Dict[str, Any]:
 
         # Members with membership dates before birth dates
         invalid_membership = db.fetch_one("""
-            SELECT COUNT(*) FROM members 
+            SELECT COUNT(*) FROM members
             WHERE membership_start_date < date_of_birth
         """)
 
@@ -128,7 +127,7 @@ def validate_database_integrity() -> Dict[str, Any]:
 
         # Cooper tests with empty time arrays
         empty_cooper_times = db.fetch_one("""
-            SELECT COUNT(*) FROM cooper_tests 
+            SELECT COUNT(*) FROM cooper_tests
             WHERE array_length(diving_times) = 0 OR array_length(surface_times) = 0
         """)
 
@@ -139,7 +138,7 @@ def validate_database_integrity() -> Dict[str, Any]:
 
         # Indoor trials with zero distance
         zero_distance_trials = db.fetch_one("""
-            SELECT COUNT(*) FROM indoor_trials 
+            SELECT COUNT(*) FROM indoor_trials
             WHERE distance_meters <= 0
         """)
 
@@ -164,14 +163,14 @@ def validate_database_integrity() -> Dict[str, Any]:
         }
 
 
-def export_database_schema(output_path: Optional[str] = None) -> str:
+def export_database_schema(output_path: str | None = None) -> str:
     """Export database schema to SQL file and return the schema as string."""
     try:
         db = get_db_connection()
 
         # Get schema information for all tables
         schema_query = """
-        SELECT sql FROM sqlite_master 
+        SELECT sql FROM sqlite_master
         WHERE type='table' AND name NOT LIKE 'sqlite_%'
         ORDER BY name
         """
@@ -180,7 +179,7 @@ def export_database_schema(output_path: Optional[str] = None) -> str:
 
         # Get index information
         index_query = """
-        SELECT sql FROM sqlite_master 
+        SELECT sql FROM sqlite_master
         WHERE type='index' AND name NOT LIKE 'sqlite_%' AND sql IS NOT NULL
         ORDER BY name
         """
@@ -226,7 +225,7 @@ def export_database_schema(output_path: Optional[str] = None) -> str:
         return ""
 
 
-def get_detailed_stats() -> Dict[str, Any]:
+def get_detailed_stats() -> dict[str, Any]:
     """Get detailed database statistics for analysis."""
     try:
         db = get_db_connection()
@@ -250,7 +249,7 @@ def get_detailed_stats() -> Dict[str, Any]:
 
         # Member statistics
         member_age_stats = db.fetch_one("""
-            SELECT 
+            SELECT
                 MIN(EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM date_of_birth)) as min_age,
                 MAX(EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM date_of_birth)) as max_age,
                 AVG(EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM date_of_birth)) as avg_age
@@ -266,7 +265,7 @@ def get_detailed_stats() -> Dict[str, Any]:
 
         # Cooper test statistics
         cooper_stats = db.fetch_one("""
-            SELECT 
+            SELECT
                 COUNT(DISTINCT member_id) as members_with_tests,
                 AVG(array_length(diving_times)) as avg_cycles_per_test,
                 MIN(test_date) as earliest_test,
@@ -286,7 +285,7 @@ def get_detailed_stats() -> Dict[str, Any]:
 
         # Indoor trial statistics
         trial_stats = db.fetch_one("""
-            SELECT 
+            SELECT
                 COUNT(DISTINCT member_id) as members_with_trials,
                 AVG(distance_meters) as avg_distance,
                 MIN(distance_meters) as min_distance,
@@ -312,7 +311,7 @@ def get_detailed_stats() -> Dict[str, Any]:
 
         # Performance summary
         most_active_member = db.fetch_one("""
-            SELECT m.name || ' ' || m.surname as member_name, 
+            SELECT m.name || ' ' || m.surname as member_name,
                    COUNT(ct.id) + COUNT(it.id) as total_activities
             FROM members m
             LEFT JOIN cooper_tests ct ON m.id = ct.member_id

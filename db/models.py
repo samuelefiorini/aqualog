@@ -5,7 +5,6 @@ Defines dataclasses for type safety and data validation.
 
 from dataclasses import dataclass
 from datetime import date, datetime, time
-from typing import List, Optional
 
 
 @dataclass
@@ -16,7 +15,7 @@ class Member:
     name: str
     surname: str
     date_of_birth: date
-    contact_info: Optional[str]
+    contact_info: str | None
     membership_start_date: date
     created_at: datetime
 
@@ -46,10 +45,10 @@ class CooperTest:
     id: int
     member_id: int
     test_date: date
-    diving_times: List[time]  # Array of diving times for each cycle
-    surface_times: List[time]  # Array of surface times for each cycle
+    diving_times: list[time]  # Array of diving times for each cycle
+    surface_times: list[time]  # Array of surface times for each cycle
     pool_length_meters: int  # Swimming pool length (e.g., 25m, 50m)
-    notes: Optional[str]
+    notes: str | None
     created_at: datetime
 
     @property
@@ -96,9 +95,9 @@ class IndoorTrial:
     id: int
     member_id: int
     trial_date: date
-    location: Optional[str]
+    location: str | None
     distance_meters: int
-    time_seconds: Optional[int]  # Optional: sometimes only distance is tracked
+    time_seconds: int | None  # Optional: sometimes only distance is tracked
     pool_length_meters: int  # Swimming pool length (e.g., 25m, 50m)
     created_at: datetime
 
@@ -108,14 +107,14 @@ class IndoorTrial:
         return self.distance_meters / self.pool_length_meters
 
     @property
-    def average_speed_mps(self) -> Optional[float]:
+    def average_speed_mps(self) -> float | None:
         """Calculate average speed in meters per second if time is available."""
         if self.time_seconds and self.time_seconds > 0:
             return self.distance_meters / self.time_seconds
         return None
 
     @property
-    def pace_per_100m(self) -> Optional[float]:
+    def pace_per_100m(self) -> float | None:
         """Calculate pace per 100 meters in seconds if time is available."""
         if self.time_seconds and self.distance_meters > 0:
             return (self.time_seconds / self.distance_meters) * 100
@@ -142,8 +141,8 @@ class PerformanceTrend:
     """Represents performance trend data for visualizations."""
 
     member_name: str
-    dates: List[date]
-    values: List[float]
+    dates: list[date]
+    values: list[float]
     metric_type: str  # e.g., "distance", "diving_time", "cycles"
 
     @property
@@ -152,12 +151,12 @@ class PerformanceTrend:
         return min(len(self.dates), len(self.values))
 
     @property
-    def latest_value(self) -> Optional[float]:
+    def latest_value(self) -> float | None:
         """Get the most recent performance value."""
         return self.values[-1] if self.values else None
 
     @property
-    def improvement_trend(self) -> Optional[str]:
+    def improvement_trend(self) -> str | None:
         """Determine if performance is improving, declining, or stable."""
         if len(self.values) < 2:
             return None
