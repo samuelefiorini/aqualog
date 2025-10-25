@@ -1,33 +1,36 @@
-# Aqualog
+# 🏊‍♂️ Aqualog - Freediving Society Management System
 
 An internal web application for a small Italian freediving society to manage and visualize training and test data.
 
-## Features
+## ✨ Features
 
-- **Member Management**: Complete registry of society members with personal details
-- **Cooper Test Tracking**: Visualization of 12-minute Cooper test sessions with diving/surface time analysis
+- **Member Management**: Complete society member registry with personal details
+- **Cooper Test Tracking**: Visualization of 12-minute Cooper test sessions with dive/surface time analysis
 - **Indoor Trial Analysis**: Performance tracking for indoor training sessions
 - **Data Visualization**: Interactive charts and performance trend analysis
 - **Synthetic Data Generation**: CLI tool for generating realistic test data
-- **Modern Architecture**: Built with Streamlit, DuckDB, and modern Python tooling
+- **Authentication System**: Access control with admin/user roles
+- **Modern Architecture**: Built with Streamlit, DuckDB and modern Python tools
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 - **Frontend**: Streamlit 1.50+ with Material Icons
 - **Database**: DuckDB for local data storage
+- **Authentication**: Database-based system with encryption
 - **Data Generation**: Faker with Italian locale
-- **CLI**: Typer for command-line interface
+- **CLI**: Typer for command line interface
 - **Logging**: Loguru for structured logging
-- **Environment**: uv for package management
+- **Package Management**: uv for dependency management
 - **Code Quality**: ruff for linting and formatting
 - **Containerization**: Docker for deployment
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Python 3.13+
 - uv (recommended) or pip
+- Cryptography package for authentication
 
 ### Installation
 
@@ -40,61 +43,76 @@ cd aqualog
 2. Install dependencies with uv:
 ```bash
 uv sync
+uv pip install cryptography>=41.0.0
 ```
 
-Or with pip:
+3. Initialize the database:
 ```bash
-pip install -r requirements.txt
+python scripts/cli.py init-db
 ```
 
-3. Generate sample data:
+4. Generate sample data:
 ```bash
-uv run python scripts/populate_db.py --members 50 --cooper-tests 200 --indoor-trials 300
+python scripts/cli.py populate --members 50 --clear
 ```
 
-4. Run the application:
+5. Start the application:
 ```bash
-uv run streamlit run app/main.py
+streamlit run main.py
 ```
 
-5. Open your browser to `http://localhost:8501`
+6. Open browser at `http://localhost:8501`
 
-## Usage
+### 🔐 Default Credentials
 
-### Data Population CLI
+- **Username**: `admin`
+- **Password**: `aqualog2024`
+- **Role**: Administrator
+
+## 📋 Usage
+
+### CLI for Data Management
 
 Generate synthetic data for testing and demonstration:
 
 ```bash
 # Generate default dataset
-uv run python scripts/populate_db.py
+python scripts/cli.py populate --members 50
 
 # Generate larger dataset with specific parameters
-uv run python scripts/populate_db.py --members 200 --cooper-tests 1000 --indoor-trials 1500
+python scripts/cli.py populate --members 200 --min-tests 2 --max-tests 8 --clear
 
-# Clear and regenerate with seed for reproducibility
-uv run python scripts/populate_db.py --clear-existing --seed 42
+# View database statistics
+python scripts/cli.py stats --detailed
 
-# Generate data for specific pool configurations
-uv run python scripts/populate_db.py --pool-lengths 25 --pool-lengths 50
+# Validate data integrity
+python scripts/cli.py validate
 
-# Validate existing data
-uv run python scripts/populate_db.py validate-data
+# Backup database
+python scripts/cli.py backup
 
-# Clear all data
-uv run python scripts/populate_db.py clear-database
+# Optimize database performance
+python scripts/cli.py optimize
 ```
 
-### Authentication
+### User Management
 
-Default credentials (configurable via environment variables):
-- Username: `admin`
-- Password: `freediving2024`
-
-Set custom credentials:
 ```bash
-export AQUALOG_USERNAME="your_username"
-export AQUALOG_PASSWORD="your_password"
+# Create new user
+python scripts/cli.py create-user --username john --password secure123 --role user --name "John Doe"
+
+# List all users
+python scripts/cli.py list-users
+
+# Change user role
+python scripts/cli.py change-role --username john --role admin
+
+# Change password
+python scripts/cli.py change-password --username john --password newpassword
+
+# Deactivate/activate user
+python scripts/cli.py deactivate-user --username john
+python scripts/cli.py activate-user --username john
 ```
 
 ## Development
@@ -126,32 +144,45 @@ uv run ruff check .
 uv run ruff format .
 ```
 
-### Project Structure
+### 📁 Project Structure
 
 ```
-freedive_app/
-├── app/                    # Main application package
-│   ├── main.py            # Streamlit entry point and routing
-│   ├── login.py           # Authentication logic
-│   └── pages/             # Individual page modules
-│       ├── landing.py     # Dashboard with KPIs
-│       ├── members.py     # Member registry display
-│       ├── cooper_tests.py # Cooper test visualizations
-│       └── indoor_trials.py # Indoor trial visualizations
-├── db/                    # Database layer
-│   ├── connection.py      # DuckDB connection management
-│   ├── schema.sql         # Database schema definition
-│   ├── queries.py         # Centralized query functions
-│   └── utils.py           # Database utility functions
-├── config/                # Configuration management
-│   └── settings.py        # Application settings and constants
-├── scripts/               # Utility scripts
-│   └── populate_db.py     # Data generation script
-└── tests/                 # Test suite
-    └── test_db.py         # Database tests
+aqualog/
+├── main.py                 # Streamlit entry point
+├── app/                    # Main application code
+│   ├── __init__.py
+│   ├── pages/              # Streamlit pages
+│   │   ├── __init__.py
+│   │   └── login.py        # Login page
+│   ├── utils/              # Application utilities
+│   │   ├── __init__.py
+│   │   ├── auth.py         # Authentication manager
+│   │   ├── auth_utils.py   # Authentication utilities
+│   │   └── config.py       # Application configuration
+│   └── auth/               # Authentication backend
+│       ├── __init__.py
+│       └── db_auth.py      # Database authentication
+├── scripts/                # CLI scripts and utilities
+│   ├── __init__.py
+│   ├── cli.py              # CLI tool for management
+│   └── data_generator.py   # Synthetic data generation
+├── db/                     # Database layer
+│   ├── __init__.py
+│   ├── connection.py       # DuckDB connection management
+│   ├── schema.sql          # Database schema
+│   ├── models.py           # Data models
+│   ├── queries.py          # Centralized query functions
+│   └── utils.py            # Database utilities
+├── tests/                  # Test suite
+│   └── __init__.py
+├── .streamlit/             # Streamlit configuration
+│   ├── config.json         # App configuration
+│   └── encryption.key      # Encryption key (auto-generated)
+└── data/                   # Application data
+    └── aqualog.duckdb      # DuckDB database
 ```
 
-## Docker Deployment
+## 🐳 Deployment Docker
 
 ### Build and Run
 
@@ -159,7 +190,7 @@ freedive_app/
 # Build the container
 docker build -t aqualog .
 
-# Run the container
+# Start the container
 docker run -p 8501:8501 -v $(pwd)/data:/app/data aqualog
 ```
 
@@ -175,11 +206,10 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - AQUALOG_USERNAME=admin
-      - AQUALOG_PASSWORD=your_secure_password
+      - AQUALOG_ENCRYPTION_KEY=your_base64_key_here
 ```
 
-## Database Schema
+## 🗄️ Database Schema
 
 ### Members Table
 - Personal details (name, surname, date of birth)
@@ -187,7 +217,7 @@ services:
 - Membership start date
 
 ### Cooper Tests Table
-- Test sessions with diving/surface time arrays
+- Test sessions with arrays of dive/surface times
 - Pool length configuration
 - Performance notes
 
@@ -196,22 +226,35 @@ services:
 - Distance and optional timing
 - Pool length and location tracking
 
-## Configuration
+### Dashboard Users Table
+- Encrypted credentials for system access
+- Role management (admin/user)
+- Access control and account lockout
+
+## ⚙️ Configuration
 
 ### Environment Variables
 
-- `AQUALOG_USERNAME`: Authentication username (default: admin)
-- `AQUALOG_PASSWORD`: Authentication password (default: aqualog2024)
-- `DB_PATH`: Database file path (default: data/aqualog.duckdb)
-- `LOG_LEVEL`: Logging level (default: INFO)
+- `AQUALOG_ENCRYPTION_KEY`: Encryption key (base64, auto-generated)
+- `AQUALOG_SESSION_TIMEOUT`: Session timeout in minutes (default: 60)
+- `AQUALOG_MAX_LOGIN_ATTEMPTS`: Maximum login attempts (default: 5)
+- `AQUALOG_LOG_LEVEL`: Logging level (default: INFO)
 
 ### Application Settings
 
-Configure via `config/settings.py`:
+Configure via `.streamlit/config.json`:
 - Database connection settings
 - Authentication parameters
 - Performance and caching options
 - UI customization
+
+### 🔐 Security
+
+- **Encryption**: Passwords encrypted with Fernet (AES-128)
+- **Hashing**: SHA-256 with unique user salts
+- **Key Management**: Secure auto-generated encryption keys
+- **Access Control**: Admin/user role system
+- **Account Protection**: Lockout after failed attempts
 
 ## Contributing
 

@@ -11,7 +11,7 @@ def main():
     """Main login page function."""
     # Configure page
     st.set_page_config(
-        page_title="Aqualog - Accesso",
+        page_title="Aqualog - Login",
         page_icon="🏊‍♂️",
         layout="centered",
         initial_sidebar_state="collapsed",
@@ -22,25 +22,25 @@ def main():
 
     # If already authenticated, show status
     if auth_manager.is_authenticated():
-        st.success(f"✅ Già connesso come **{auth_manager.get_current_user()}**")
+        st.success(f"✅ Already logged in as **{auth_manager.get_current_user()}**")
         st.info(
-            "🏠 Naviga alle pagine principali dell'applicazione usando la barra laterale o la navigazione."
+            "🏠 Navigate to the main application pages using the sidebar or navigation."
         )
 
         col1, col2, col3 = st.columns([1, 1, 1])
         with col2:
-            if st.button("🚪 Esci", type="secondary", use_container_width=True):
+            if st.button("🚪 Logout", type="secondary", use_container_width=True):
                 auth_manager.logout()
                 st.rerun()
 
         # Show available pages
         st.markdown("---")
-        st.subheader("📄 Pagine Disponibili")
+        st.subheader("📄 Available Pages")
         st.markdown("""
-        - **Pannello di Controllo** - Visualizza statistiche e panoramica del sistema
-        - **Membri** - Sfoglia il registro dei membri
-        - **Test Cooper** - Visualizza risultati e tendenze dei test Cooper
-        - **Prove Indoor** - Analizza i dati di allenamento indoor
+        - **Dashboard** - View system statistics and overview
+        - **Members** - Browse the member registry
+        - **Cooper Tests** - View Cooper test results and trends
+        - **Indoor Trials** - Analyze indoor training data
         """)
 
         return

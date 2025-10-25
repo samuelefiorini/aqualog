@@ -49,7 +49,7 @@ The authentication system provides secure credential-based authentication using 
 ## Default Credentials
 
 **Username:** `admin`  
-**Password:** `admin123`  
+**Password:** `aqualog2024`  
 **Role:** Administrator
 
 ⚠️ **Important:** Change default credentials in production!
@@ -391,7 +391,7 @@ ls -la .streamlit/encryption.key
 
 **Expected results:**
 - ✅ Encryption key automatically created in `.streamlit/encryption.key`
-- ✅ Default admin user created (admin/admin123)
+- ✅ Default admin user created (admin/aqualog2024)
 - ✅ Test user created with encrypted password
 - ✅ Users listed with proper roles and status
 

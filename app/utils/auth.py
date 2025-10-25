@@ -132,8 +132,8 @@ class AuthManager:
             return False
 
         if not self.is_admin():
-            st.error("🚫 Accesso Negato: Privilegi di amministratore richiesti")
-            st.info("Contatta il tuo amministratore per accedere a questa pagina.")
+            st.error("🚫 Access Denied: Administrator privileges required")
+            st.info("Contact your administrator to access this page.")
             st.stop()
 
         return True
@@ -150,9 +150,9 @@ class AuthManager:
             return False
 
         if not self.can_write():
-            st.error("🚫 Accesso Negato: Permessi di scrittura richiesti")
+            st.error("🚫 Access Denied: Write permissions required")
             st.info(
-                "Hai accesso in sola lettura. Contatta il tuo amministratore per i permessi di scrittura."
+                "You have read-only access. Contact your administrator for write permissions."
             )
             return False
 
@@ -160,58 +160,56 @@ class AuthManager:
 
     def show_login_form(self) -> None:
         """Display the login form."""
-        st.title("🏊‍♂️ Aqualog - Accesso")
+        st.title("🏊‍♂️ Aqualog - Login")
         st.markdown("---")
 
         # Login form
         with st.form("login_form"):
-            st.subheader("Effettua l'accesso per utilizzare Aqualog")
+            st.subheader("Login to use Aqualog")
 
-            username = st.text_input(
-                "Nome utente", placeholder="Inserisci il tuo nome utente"
-            )
+            username = st.text_input("Username", placeholder="Enter your username")
             password = st.text_input(
-                "Password", type="password", placeholder="Inserisci la tua password"
+                "Password", type="password", placeholder="Enter your password"
             )
 
             col1, col2, col3 = st.columns([1, 1, 1])
             with col2:
                 login_button = st.form_submit_button(
-                    "🔑 Accedi", use_container_width=True
+                    "🔑 Login", use_container_width=True
                 )
 
             if login_button:
                 if not username or not password:
-                    st.error("Inserisci sia il nome utente che la password.")
+                    st.error("Please enter both username and password.")
                 else:
                     if self.authenticate(username, password):
-                        st.success(f"Benvenuto, {username}!")
+                        st.success(f"Welcome, {username}!")
                         st.rerun()
                     else:
-                        st.error("Nome utente o password non validi.")
+                        st.error("Invalid username or password.")
 
         # Information section
         st.markdown("---")
 
         # User roles information
-        with st.expander("👥 Ruoli Utente"):
+        with st.expander("👥 User Roles"):
             st.info("""
-            **Amministratore:**
-            - Accesso completo in lettura e scrittura
-            - Può visualizzare tutte le pagine e i dati
-            - Può modificare le impostazioni del sistema
+            **Administrator:**
+            - Full read and write access
+            - Can view all pages and data
+            - Can modify system settings
             
-            **Utente:**
-            - Accesso in sola lettura
-            - Può visualizzare dati e report
-            - Non può modificare i dati
+            **User:**
+            - Read-only access
+            - Can view data and reports
+            - Cannot modify data
             """)
 
         # Footer
         st.markdown("---")
         st.markdown(
             "<div style='text-align: center; color: #666;'>"
-            "Aqualog - Sistema di Gestione Società di Apnea"
+            "Aqualog - Freediving Society Management System"
             "</div>",
             unsafe_allow_html=True,
         )
