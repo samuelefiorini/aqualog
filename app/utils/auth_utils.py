@@ -135,7 +135,7 @@ def show_auth_sidebar() -> None:
             st.subheader("🔐 Authentication")
             st.success(f"Logged in as: **{auth_manager.get_current_user()}**")
 
-            if st.button("🚪 Logout", key="sidebar_logout"):
+            if st.button("logout Logout", key="sidebar_logout"):
                 auth_manager.logout()
                 st.rerun()
 
@@ -153,12 +153,12 @@ def show_auth_header() -> None:
             st.write(f"👤 **{auth_manager.get_current_user()}**")
 
         with col3:
-            if st.button("🚪 Logout", key="header_logout"):
+            if st.button("logout Logout", key="header_logout"):
                 auth_manager.logout()
                 st.rerun()
 
 
-def protect_page(title: str = None, icon: str = "🏊‍♂️") -> bool:
+def protect_page(title: str = None, icon: str = ":material/pool:") -> bool:
     """
     Protect a page with authentication and set up basic layout.
 
@@ -194,7 +194,7 @@ class AuthenticatedPage:
             st.write("Protected content here")
     """
 
-    def __init__(self, title: str = None, icon: str = "🏊‍♂️"):
+    def __init__(self, title: str = None, icon: str = ":material/pool:"):
         self.title = title
         self.icon = icon
         self.auth_manager = get_auth_manager()

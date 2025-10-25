@@ -174,9 +174,7 @@ class AuthManager:
 
             col1, col2, col3 = st.columns([1, 1, 1])
             with col2:
-                login_button = st.form_submit_button(
-                    "🔑 Login", use_container_width=True
-                )
+                login_button = st.form_submit_button("🔑 Login", width="stretch")
 
             if login_button:
                 if not username or not password:
@@ -207,12 +205,7 @@ class AuthManager:
 
         # Footer
         st.markdown("---")
-        st.markdown(
-            "<div style='text-align: center; color: #666;'>"
-            "Aqualog - Freediving Society Management System"
-            "</div>",
-            unsafe_allow_html=True,
-        )
+        st.caption("Aqualog - Freediving Society Management System")
 
 
 # Global authentication manager instance

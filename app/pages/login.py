@@ -12,7 +12,7 @@ def main():
     # Configure page
     st.set_page_config(
         page_title="Aqualog - Login",
-        page_icon="🏊‍♂️",
+        page_icon=":material/pool:",
         layout="centered",
         initial_sidebar_state="collapsed",
     )
@@ -29,7 +29,7 @@ def main():
 
         col1, col2, col3 = st.columns([1, 1, 1])
         with col2:
-            if st.button("🚪 Logout", type="secondary", use_container_width=True):
+            if st.button("🚪 Logout", type="secondary", width="stretch"):
                 auth_manager.logout()
                 st.rerun()
 
