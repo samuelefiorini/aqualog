@@ -6,7 +6,14 @@ including connection management, data models, queries, and utilities.
 """
 
 from .connection import DatabaseConnection, get_db_connection
-from .models import CooperTest, DatabaseStats, IndoorTrial, Member, PerformanceTrend
+from .models import (
+    CooperTest,
+    DatabaseStats,
+    IndoorTrial,
+    Member,
+    PerformanceTrend,
+    DashboardUser,
+)
 from .queries import (
     get_all_cooper_tests,
     get_all_indoor_trials,
@@ -41,6 +48,7 @@ __all__ = [
     "IndoorTrial",
     "DatabaseStats",
     "PerformanceTrend",
+    "DashboardUser",
     # Queries
     "get_all_members",
     "get_member_by_id",

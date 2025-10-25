@@ -10,6 +10,12 @@ from datetime import date, time, datetime, timedelta
 import random
 from loguru import logger
 
+import sys
+from pathlib import Path
+
+# Add parent directory to path for db imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from db import insert_member, insert_cooper_test, insert_indoor_trial
 
 

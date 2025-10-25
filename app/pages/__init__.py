@@ -1,1 +1,5 @@
-"""Streamlit pages for Aqualog."""
+"""
+Aqualog Pages Package
+
+Streamlit pages for the application.
+"""

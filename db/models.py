@@ -5,6 +5,7 @@ Defines dataclasses for type safety and data validation.
 
 from dataclasses import dataclass
 from datetime import date, datetime, time
+from typing import List, Optional
 
 
 @dataclass
@@ -170,3 +171,48 @@ class PerformanceTrend:
             return "declining"
         else:
             return "stable"
+
+
+@dataclass
+class DashboardUser:
+    """Represents a dashboard user with authentication and role information."""
+
+    id: int
+    username: str
+    password_hash: str
+    salt: str
+    email: Optional[str]
+    full_name: Optional[str]
+    role: str  # 'admin' or 'user'
+    is_active: bool
+    created_at: datetime
+    last_login: Optional[datetime]
+    login_attempts: int
+    locked_until: Optional[datetime]
+
+    @property
+    def is_admin(self) -> bool:
+        """Check if user has admin privileges."""
+        return self.role == "admin"
+
+    @property
+    def is_locked(self) -> bool:
+        """Check if user account is currently locked."""
+        if self.locked_until is None:
+            return False
+        return datetime.now() < self.locked_until
+
+    @property
+    def can_write(self) -> bool:
+        """Check if user has write permissions."""
+        return self.is_admin and self.is_active
+
+    @property
+    def can_read(self) -> bool:
+        """Check if user has read permissions."""
+        return self.is_active
+
+    @property
+    def display_name(self) -> str:
+        """Get display name for the user."""
+        return self.full_name or self.username

@@ -38,8 +38,26 @@ CREATE TABLE IF NOT EXISTS indoor_trials (
     FOREIGN KEY (member_id) REFERENCES members(id)
 );
 
+-- Dashboard users table with encrypted credentials
+CREATE TABLE IF NOT EXISTS dashboard_users (
+    id INTEGER,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(128) NOT NULL,  -- Encrypted password hash
+    salt VARCHAR(32) NOT NULL,            -- Unique salt for each user
+    email VARCHAR(255),
+    full_name VARCHAR(100),
+    role VARCHAR(20) DEFAULT 'user',      -- 'admin' or 'user'
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP,
+    login_attempts INTEGER DEFAULT 0,
+    locked_until TIMESTAMP
+);
+
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_cooper_tests_member_date ON cooper_tests(member_id, test_date);
 CREATE INDEX IF NOT EXISTS idx_indoor_trials_member_date ON indoor_trials(member_id, trial_date);
 CREATE INDEX IF NOT EXISTS idx_members_name ON members(surname, name);
 CREATE INDEX IF NOT EXISTS idx_members_membership_date ON members(membership_start_date);
+CREATE INDEX IF NOT EXISTS idx_dashboard_users_username ON dashboard_users(username);
+CREATE INDEX IF NOT EXISTS idx_dashboard_users_active ON dashboard_users(is_active);

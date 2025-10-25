@@ -12,6 +12,9 @@ from pathlib import Path
 from loguru import logger
 import sys
 
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 # Configure logger
 logger.remove()
 logger.add(
@@ -22,7 +25,7 @@ logger.add(
 
 app = typer.Typer(
     name="aqualog",
-    help="Aqualog CLI - Freediving Society Management System",
+    help="Aqualog CLI - Sistema di Gestione Società di Apnea",
     add_completion=False,
 )
 
@@ -532,6 +535,336 @@ def generate_sample(
     except Exception as e:
         logger.error(f"Sample data generation error: {e}")
         typer.echo(f"❌ Error generating sample data: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def create_user(
+    username: str = typer.Option(
+        ..., "--username", "-u", help="Username for the new user"
+    ),
+    password: str = typer.Option(
+        ..., "--password", "-p", help="Password for the new user"
+    ),
+    role: str = typer.Option("user", "--role", "-r", help="User role (admin or user)"),
+    full_name: str = typer.Option(None, "--name", "-n", help="Full name of the user"),
+    email: str = typer.Option(None, "--email", "-e", help="Email address of the user"),
+) -> None:
+    """Create a new dashboard user."""
+
+    if role not in ["admin", "user"]:
+        typer.echo("❌ Error: Role must be 'admin' or 'user'")
+        raise typer.Exit(1)
+
+    logger.info(f"Creating user: {username} (role: {role})")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+
+        # Check if user already exists
+        existing_user = db_auth.get_user_by_username(username)
+        if existing_user:
+            typer.echo(f"❌ Error: User '{username}' already exists")
+            raise typer.Exit(1)
+
+        # Create user
+        user_id = db_auth.create_user(
+            username=username,
+            password=password,
+            role=role,
+            full_name=full_name,
+            email=email,
+        )
+
+        typer.echo(f"✅ User '{username}' created successfully (ID: {user_id})")
+        typer.echo(f"   Role: {role}")
+        if full_name:
+            typer.echo(f"   Name: {full_name}")
+        if email:
+            typer.echo(f"   Email: {email}")
+
+        logger.info(f"User creation completed: {username}")
+
+    except Exception as e:
+        logger.error(f"User creation error: {e}")
+        typer.echo(f"❌ Error creating user: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def list_users() -> None:
+    """List all dashboard users."""
+    logger.info("Listing all users")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+        users = db_auth.get_all_users()
+
+        if not users:
+            typer.echo("No users found.")
+            return
+
+        typer.echo("👥 Dashboard Users")
+        typer.echo("=" * 50)
+
+        for user in users:
+            status = "🟢 Active" if user.is_active else "🔴 Inactive"
+            locked = " 🔒 Locked" if user.is_locked else ""
+            role_icon = "👑" if user.is_admin else "👤"
+
+            typer.echo(f"{role_icon} {user.username} ({user.role}) - {status}{locked}")
+            if user.full_name:
+                typer.echo(f"   Name: {user.full_name}")
+            if user.email:
+                typer.echo(f"   Email: {user.email}")
+            if user.last_login:
+                typer.echo(f"   Last Login: {user.last_login}")
+            typer.echo(f"   Created: {user.created_at}")
+            typer.echo()
+
+        logger.info(f"Listed {len(users)} users")
+
+    except Exception as e:
+        logger.error(f"Error listing users: {e}")
+        typer.echo(f"❌ Error listing users: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def change_password(
+    username: str = typer.Option(
+        ..., "--username", "-u", help="Username to change password for"
+    ),
+    new_password: str = typer.Option(..., "--password", "-p", help="New password"),
+) -> None:
+    """Change user password."""
+    logger.info(f"Changing password for user: {username}")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+
+        # Check if user exists
+        user = db_auth.get_user_by_username(username)
+        if not user:
+            typer.echo(f"❌ Error: User '{username}' not found")
+            raise typer.Exit(1)
+
+        # Change password
+        success = db_auth.change_password(username, new_password)
+
+        if success:
+            typer.echo(f"✅ Password changed successfully for user '{username}'")
+            logger.info(f"Password changed for user: {username}")
+        else:
+            typer.echo(f"❌ Failed to change password for user '{username}'")
+            raise typer.Exit(1)
+
+    except Exception as e:
+        logger.error(f"Password change error: {e}")
+        typer.echo(f"❌ Error changing password: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def change_role(
+    username: str = typer.Option(
+        ..., "--username", "-u", help="Username to change role for"
+    ),
+    role: str = typer.Option(..., "--role", "-r", help="New role (admin or user)"),
+) -> None:
+    """Change user role."""
+
+    if role not in ["admin", "user"]:
+        typer.echo("❌ Error: Role must be 'admin' or 'user'")
+        raise typer.Exit(1)
+
+    logger.info(f"Changing role for user: {username} to {role}")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+
+        # Check if user exists
+        user = db_auth.get_user_by_username(username)
+        if not user:
+            typer.echo(f"❌ Error: User '{username}' not found")
+            raise typer.Exit(1)
+
+        # Change role
+        success = db_auth.update_user_role(username, role)
+
+        if success:
+            typer.echo(
+                f"✅ Role changed successfully for user '{username}' to '{role}'"
+            )
+            logger.info(f"Role changed for user: {username} to {role}")
+        else:
+            typer.echo(f"❌ Failed to change role for user '{username}'")
+            raise typer.Exit(1)
+
+    except Exception as e:
+        logger.error(f"Role change error: {e}")
+        typer.echo(f"❌ Error changing role: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def deactivate_user(
+    username: str = typer.Option(
+        ..., "--username", "-u", help="Username to deactivate"
+    ),
+) -> None:
+    """Deactivate user account."""
+    logger.info(f"Deactivating user: {username}")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+
+        # Check if user exists
+        user = db_auth.get_user_by_username(username)
+        if not user:
+            typer.echo(f"❌ Error: User '{username}' not found")
+            raise typer.Exit(1)
+
+        # Deactivate user
+        success = db_auth.deactivate_user(username)
+
+        if success:
+            typer.echo(f"✅ User '{username}' deactivated successfully")
+            logger.info(f"User deactivated: {username}")
+        else:
+            typer.echo(f"❌ Failed to deactivate user '{username}'")
+            raise typer.Exit(1)
+
+    except Exception as e:
+        logger.error(f"User deactivation error: {e}")
+        typer.echo(f"❌ Error deactivating user: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def activate_user(
+    username: str = typer.Option(..., "--username", "-u", help="Username to activate"),
+) -> None:
+    """Activate user account."""
+    logger.info(f"Activating user: {username}")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+
+        # Check if user exists
+        user = db_auth.get_user_by_username(username)
+        if not user:
+            typer.echo(f"❌ Error: User '{username}' not found")
+            raise typer.Exit(1)
+
+        # Activate user
+        success = db_auth.activate_user(username)
+
+        if success:
+            typer.echo(f"✅ User '{username}' activated successfully")
+            logger.info(f"User activated: {username}")
+        else:
+            typer.echo(f"❌ Failed to activate user '{username}'")
+            raise typer.Exit(1)
+
+    except Exception as e:
+        logger.error(f"User activation error: {e}")
+        typer.echo(f"❌ Error activating user: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def unlock_user(
+    username: str = typer.Option(..., "--username", "-u", help="Username to unlock"),
+) -> None:
+    """Unlock user account."""
+    logger.info(f"Unlocking user: {username}")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+
+        # Check if user exists
+        user = db_auth.get_user_by_username(username)
+        if not user:
+            typer.echo(f"❌ Error: User '{username}' not found")
+            raise typer.Exit(1)
+
+        # Unlock user
+        success = db_auth.unlock_user(username)
+
+        if success:
+            typer.echo(f"✅ User '{username}' unlocked successfully")
+            logger.info(f"User unlocked: {username}")
+        else:
+            typer.echo(f"❌ Failed to unlock user '{username}'")
+            raise typer.Exit(1)
+
+    except Exception as e:
+        logger.error(f"User unlock error: {e}")
+        typer.echo(f"❌ Error unlocking user: {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def delete_user(
+    username: str = typer.Option(..., "--username", "-u", help="Username to delete"),
+    confirm: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation prompt"),
+) -> None:
+    """Delete user account permanently."""
+
+    # Prevent deleting the default admin
+    if username == "admin":
+        typer.echo("❌ Error: Cannot delete the default admin user")
+        raise typer.Exit(1)
+
+    if not confirm:
+        confirm = typer.confirm(
+            f"Are you sure you want to delete user '{username}'? This cannot be undone."
+        )
+        if not confirm:
+            typer.echo("Operation cancelled.")
+            return
+
+    logger.info(f"Deleting user: {username}")
+
+    try:
+        from app.auth.db_auth import get_db_auth_manager
+
+        db_auth = get_db_auth_manager()
+
+        # Check if user exists
+        user = db_auth.get_user_by_username(username)
+        if not user:
+            typer.echo(f"❌ Error: User '{username}' not found")
+            raise typer.Exit(1)
+
+        # Delete user
+        success = db_auth.delete_user(username)
+
+        if success:
+            typer.echo(f"✅ User '{username}' deleted successfully")
+            logger.info(f"User deleted: {username}")
+        else:
+            typer.echo(f"❌ Failed to delete user '{username}'")
+            raise typer.Exit(1)
+
+    except Exception as e:
+        logger.error(f"User deletion error: {e}")
+        typer.echo(f"❌ Error deleting user: {e}")
         raise typer.Exit(1)
 
 
