@@ -6,7 +6,7 @@ Main entry point for the Streamlit application using modern st.navigation.
 
 import streamlit as st
 from app.utils.auth import get_auth_manager
-from app.pages.dashboard import show_dashboard_page
+from app.pages.landing import show_landing_page
 from app.pages.members import show_members_page
 from app.pages.cooper_tests import show_cooper_tests_page
 from app.pages.indoor_trials import show_indoor_trials_page
@@ -47,7 +47,7 @@ def main():
         pages = {
             "Main": [
                 st.Page(
-                    show_dashboard_page, title="Dashboard", icon=":material/dashboard:"
+                    show_landing_page, title="Dashboard", icon=":material/dashboard:"
                 ),
             ],
             "Data Management": [
@@ -75,7 +75,7 @@ def main():
         pages = {
             "Main": [
                 st.Page(
-                    show_dashboard_page, title="Dashboard", icon=":material/dashboard:"
+                    show_landing_page, title="Dashboard", icon=":material/dashboard:"
                 ),
             ],
             "Data Views": [
