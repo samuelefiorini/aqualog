@@ -69,17 +69,17 @@ class FreedivingProvider(BaseProvider):
 
         return self.random_element(formats)
 
-    def diving_time(self, min_seconds: int = 20, max_seconds: int = 120) -> time:
-        """Generate a realistic diving time."""
+    def diving_time(self, min_seconds: int = 10, max_seconds: int = 40) -> time:
+        """Generate a realistic diving time for Cooper tests."""
         seconds = random.randint(min_seconds, max_seconds)
         return time(0, seconds // 60, seconds % 60)
 
-    def surface_time(self, min_seconds: int = 10, max_seconds: int = 60) -> time:
-        """Generate a realistic surface recovery time."""
+    def surface_time(self, min_seconds: int = 15, max_seconds: int = 40) -> time:
+        """Generate a realistic surface recovery time for Cooper tests."""
         seconds = random.randint(min_seconds, max_seconds)
         return time(0, seconds // 60, seconds % 60)
 
-    def cooper_test_cycles(self, min_cycles: int = 3, max_cycles: int = 12) -> int:
+    def cooper_test_cycles(self, min_cycles: int = 12, max_cycles: int = 36) -> int:
         """Generate number of cycles for a Cooper test."""
         return random.randint(min_cycles, max_cycles)
 
@@ -170,38 +170,53 @@ class DataGenerator:
                 start_date=date.today() - timedelta(days=730), end_date=date.today()
             )
 
-        # Number of cycles based on skill level
-        if member_skill == "beginner":
-            cycles = random.randint(3, 6)
-        elif member_skill == "intermediate":
-            cycles = random.randint(5, 9)
-        else:  # advanced
-            cycles = random.randint(7, 12)
+        # Cooper test is exactly 12 minutes (720 seconds)
+        # Generate cycles until we reach or exceed 720 seconds, then cut off
+        COOPER_TEST_DURATION = 720  # 12 minutes in seconds
 
-        # Generate diving and surface times
         diving_times = []
         surface_times = []
+        total_time = 0
+        cycle_count = 0
 
-        for i in range(cycles):
+        # Generate cycles until we exceed 12 minutes
+        while total_time < COOPER_TEST_DURATION:
             # Diving times get shorter as fatigue sets in
-            fatigue_factor = 1 - (i * 0.1)  # 10% reduction per cycle
+            fatigue_factor = 1 - (cycle_count * 0.03)  # 3% reduction per cycle
 
             if member_skill == "beginner":
-                base_diving = random.randint(20, 45)
-                base_surface = random.randint(15, 30)
+                base_diving = random.randint(12, 25)  # 12-25 seconds for beginners
+                base_surface = random.randint(25, 35)  # 25-35 seconds surface time
             elif member_skill == "intermediate":
-                base_diving = random.randint(35, 70)
-                base_surface = random.randint(12, 25)
+                base_diving = random.randint(15, 30)  # 15-30 seconds for intermediate
+                base_surface = random.randint(20, 35)  # 20-35 seconds surface time
             else:  # advanced
-                base_diving = random.randint(60, 120)
-                base_surface = random.randint(10, 20)
+                base_diving = random.randint(18, 35)  # 18-35 seconds for advanced
+                base_surface = random.randint(
+                    18, 30
+                )  # 18-30 seconds surface time (shorter recovery)
 
             # Apply fatigue
-            diving_seconds = max(15, int(base_diving * fatigue_factor))
-            surface_seconds = max(8, int(base_surface * (1 + (1 - fatigue_factor))))
+            diving_seconds = max(
+                10, int(base_diving * fatigue_factor)
+            )  # Minimum 10 seconds
+            surface_seconds = max(
+                15, int(base_surface * (1 + (cycle_count * 0.02)))
+            )  # Slight increase in surface time with fatigue
 
-            diving_times.append(time(0, diving_seconds // 60, diving_seconds % 60))
-            surface_times.append(time(0, surface_seconds // 60, surface_seconds % 60))
+            # Check if this complete cycle would fit within 12 minutes
+            cycle_time = diving_seconds + surface_seconds
+            if total_time + cycle_time <= COOPER_TEST_DURATION:
+                # Complete cycle fits, add it
+                diving_times.append(time(0, diving_seconds // 60, diving_seconds % 60))
+                surface_times.append(
+                    time(0, surface_seconds // 60, surface_seconds % 60)
+                )
+                total_time += cycle_time
+                cycle_count += 1
+            else:
+                # This cycle would exceed 12 minutes, stop here
+                break
 
         pool_length = self.fake.pool_length()
 
