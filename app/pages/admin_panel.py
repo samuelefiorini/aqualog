@@ -28,5 +28,3 @@ def show_admin_panel_page():
     st.info(
         "🚧 Admin Panel is under construction. This will provide user management, backups, and system configuration."
     )
-
-    st.success("👑 Administrator Access - You have full administrative privileges")

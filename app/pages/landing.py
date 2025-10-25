@@ -167,9 +167,3 @@ def show_landing_page():
     except Exception as e:
         logger.error(f"Landing page data loading error: {e}")
         show_error_fallback()
-
-    # Footer with navigation reminder
-    st.markdown("---")
-    st.success(
-        "✨ Ready to explore your freediving data? Use the sidebar to get started!"
-    )

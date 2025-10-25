@@ -103,31 +103,15 @@ def main():
     with st.sidebar:
         st.markdown("---")
 
-        # User info
-        st.markdown("**👤 Current User**")
-        st.write(f"**{user.display_name}**")
-        st.write(f"Role: {user.role}")
-
-        st.markdown("---")
-
-        # Quick stats
-        st.markdown("**📊 Quick Stats**")
-        try:
-            from db import get_database_stats
-
-            stats = get_database_stats()
-            st.write(f"Members: {stats.total_members}")
-            st.write(f"Cooper Tests: {stats.total_cooper_tests}")
-            st.write(f"Indoor Trials: {stats.total_indoor_trials}")
-        except Exception:
-            st.write("Data not available")
-
-        st.markdown("---")
-
-        # System info
-        st.markdown("**ℹ️ System**")
-        st.write("Version: 1.0.0")
-        st.write("Database: DuckDB")
+        # Enhanced user info with proper emoji and styling
+        if user.is_admin:
+            st.markdown("### 👑 Administrator")
+            st.markdown(f"**{user.display_name}**")
+            st.caption("Full system access")
+        else:
+            st.markdown("### 👤 User")
+            st.markdown(f"**{user.display_name}**")
+            st.caption("Read-only access")
 
         st.markdown("---")
 
