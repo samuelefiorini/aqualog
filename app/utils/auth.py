@@ -174,7 +174,7 @@ class AuthManager:
 
             col1, col2, col3 = st.columns([1, 1, 1])
             with col2:
-                login_button = st.form_submit_button("🔑 Login", width="stretch")
+                login_button = st.form_submit_button("🔑 Login")
 
             if login_button:
                 if not username or not password:

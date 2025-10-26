@@ -8,6 +8,8 @@ pandas>=2.0.0
 plotly>=5.0.0
 python-dotenv>=1.0.0
 cryptography>=41.0.0
+statsmodels>=0.14.0
+scipy>=1.11.0
 
 # Development dependencies
 pytest>=8.0.0

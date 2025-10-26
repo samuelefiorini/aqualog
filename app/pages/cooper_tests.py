@@ -196,10 +196,10 @@ def create_performance_trends_chart(df):
     fig.update_yaxes(title_text="Meters", row=2, col=2)
 
     fig.update_layout(
-        height=600,
-        title_text="Cooper Test Performance Trends",
+        height=700,
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
+        margin=dict(b=100),
     )
 
     return fig
@@ -346,7 +346,6 @@ def create_diving_vs_surface_chart(df):
         color="member_name",
         size="total_cycles",
         hover_data=["test_date", "total_cycles", "pool_length"],
-        title="Diving Time vs Surface Time Relationship",
         labels={
             "avg_diving_time": "Average Diving Time (seconds)",
             "avg_surface_time": "Average Surface Time (seconds)",
@@ -354,18 +353,55 @@ def create_diving_vs_surface_chart(df):
         },
     )
 
-    # Add diagonal reference line
-    max_time = max(df["avg_diving_time"].max(), df["avg_surface_time"].max())
-    fig.add_shape(
-        type="line",
-        x0=0,
-        y0=0,
-        x1=max_time,
-        y1=max_time,
-        line=dict(color="gray", width=1, dash="dash"),
+    # Remove the title since it's handled by Streamlit
+    fig.update_layout(title=None)
+
+    # Calculate linear regression statistics for all data
+    import numpy as np
+    from scipy import stats
+    import plotly.graph_objects as go
+
+    x = df["avg_diving_time"].values
+    y = df["avg_surface_time"].values
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+
+    # Add regression line for all data
+    x_range = np.array([x.min(), x.max()])
+    y_pred = slope * x_range + intercept
+
+    fig.add_trace(
+        go.Scatter(
+            x=x_range,
+            y=y_pred,
+            mode="lines",
+            name="Linear Regression (All Athletes)",
+            line=dict(color="black", width=2, dash="dash"),
+            showlegend=True,
+        )
     )
 
-    fig.update_layout(height=500)
+    # Add annotation with regression info
+    fig.add_annotation(
+        text=f"Linear Regression<br>Slope: {slope:.2f}<br>R²: {r_value**2:.3f}",
+        xref="paper",
+        yref="paper",
+        x=0.02,
+        y=0.98,
+        showarrow=False,
+        bgcolor="rgba(255, 255, 255, 0.8)",
+        bordercolor="gray",
+        borderwidth=1,
+        font=dict(size=10),
+        align="left",
+        xanchor="left",
+        yanchor="top",
+    )
+
+    fig.update_layout(
+        height=650,
+        legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
+        margin=dict(b=100),
+    )
     return fig
 
 
@@ -601,7 +637,7 @@ def show_cooper_tests_page():
 
         trends_chart = create_performance_trends_chart(filtered_df)
         if trends_chart:
-            st.plotly_chart(trends_chart, use_container_width=True)
+            st.plotly_chart(trends_chart)
 
         # Parallel coordinates chart for cycle-by-cycle analysis
         if selected_member != "All Members":
@@ -623,7 +659,7 @@ def show_cooper_tests_page():
             parallel_chart = create_parallel_coordinates_chart(member_data, time_type)
 
             if parallel_chart:
-                st.plotly_chart(parallel_chart, use_container_width=True)
+                st.plotly_chart(parallel_chart)
                 st.caption(
                     f"Each line represents a cycle number, showing how {time_type} times change across test dates. "
                     "This helps identify which cycles improve or decline over time."
@@ -700,7 +736,7 @@ def show_cooper_tests_page():
 
         relationship_chart = create_diving_vs_surface_chart(filtered_df)
         if relationship_chart:
-            st.plotly_chart(relationship_chart, use_container_width=True)
+            st.plotly_chart(relationship_chart)
 
         # Individual test session analysis
         if selected_member != "All Members":
@@ -729,7 +765,7 @@ def show_cooper_tests_page():
                 # Show cycle patterns
                 cycle_chart = create_cycle_patterns_chart(selected_test_data)
                 if cycle_chart:
-                    st.plotly_chart(cycle_chart, use_container_width=True)
+                    st.plotly_chart(cycle_chart)
 
                 # Show detailed metrics for selected test
                 col1, col2, col3 = st.columns(3)
@@ -797,7 +833,7 @@ def show_cooper_tests_page():
         for col in numeric_cols:
             display_df[col] = display_df[col].round(1)
 
-        st.dataframe(display_df, hide_index=True, use_container_width=True, height=300)
+        st.dataframe(display_df, hide_index=True, height=300)
 
         # Additional actions
         st.markdown("---")

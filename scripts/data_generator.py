@@ -85,18 +85,22 @@ class FreedivingProvider(BaseProvider):
 
     def pool_length(self) -> int:
         """Generate a realistic pool length."""
-        return random.choice([25, 50])  # Standard pool lengths
+        # Use 25m pools exclusively (keep 50m as possibility but weight heavily toward 25m)
+        return random.choices([25, 50], weights=[100, 0])[0]
 
     def freediving_distance(self, skill_level: str = "intermediate") -> int:
         """Generate realistic freediving distance based on skill level."""
         if skill_level == "beginner":
-            return random.randint(25, 100)
+            # Normal athletes: 50-75m (75% of cohort)
+            return random.randint(50, 75)
         elif skill_level == "intermediate":
-            return random.randint(75, 200)
+            # Good athletes: 75-125m (23% of cohort)
+            return random.randint(75, 125)
         elif skill_level == "advanced":
-            return random.randint(150, 400)
+            # Elite athletes: 125m+ (2% of cohort)
+            return random.randint(125, 150)
         else:
-            return random.randint(50, 250)
+            return random.randint(50, 85)
 
     def freediving_time(self, distance: int, pool_length: int) -> Optional[int]:
         """Generate realistic time for a given distance (sometimes None)."""
@@ -105,8 +109,8 @@ class FreedivingProvider(BaseProvider):
             return None
 
         # Calculate approximate time based on distance
-        # Assume average speed of 0.8-1.5 m/s for freediving
-        speed = random.uniform(0.8, 1.5)
+        # Average speed around 1 m/s for freediving (0.9-1.1 m/s)
+        speed = random.uniform(0.9, 1.1)
         base_time = distance / speed
 
         # Add some variation and rest time between laps
@@ -128,10 +132,10 @@ class DataGenerator:
         # Skill level distribution (realistic for a freediving society)
         self.skill_levels = ["beginner", "intermediate", "advanced"]
         self.skill_weights = [
-            0.4,
-            0.5,
-            0.1,
-        ]  # 40% beginners, 50% intermediate, 10% advanced
+            0.75,
+            0.23,
+            0.02,
+        ]  # 75% normal (50-75m), 23% good (75-125m), 2% elite (125m+)
 
         logger.info(f"DataGenerator initialized with locale: {locale}")
 

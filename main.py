@@ -116,7 +116,7 @@ def main():
         st.markdown("---")
 
         # Logout button in sidebar
-        if st.button("🚪 Logout", width="stretch", type="secondary"):
+        if st.button("🚪 Logout", type="secondary"):
             auth_manager.logout()
             st.rerun()
 

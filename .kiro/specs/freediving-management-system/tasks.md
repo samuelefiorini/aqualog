@@ -112,7 +112,11 @@
   - Add filtering and member selection capabilities
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7_
 
-- [ ] 10. Build indoor trials visualization page
+- [x] 10. Build indoor trials visualization page
+
+
+
+
   - Create indoor trials page with performance analysis
   - Implement cached data loading for trial data
   - Build distance vs time plots and performance trend charts

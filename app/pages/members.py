@@ -283,7 +283,7 @@ def show_members_page():
                 filtered_df,
                 column_config=column_config,
                 hide_index=True,
-                use_container_width=True,
+                width="stretch",
                 height=400,
             )
 
