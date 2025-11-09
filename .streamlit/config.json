@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "Aqualog",
+    "version": "1.0.0",
+    "description": "Freediving Society Management System",
+    "debug": false
+  },
+  "database": {
+    "path": "data/aqualog.duckdb",
+    "backup_dir": "backups",
+    "auto_backup": true,
+    "backup_retention_days": 30
+  },
+  "auth": {
+    "session_timeout_minutes": 60,
+    "max_login_attempts": 5,
+    "lockout_duration_minutes": 15,
+    "require_auth": true,
+    "credentials_file": ".streamlit/credentials.json"
+  },
+  "ui": {
+    "theme": "light",
+    "sidebar_expanded": true,
+    "show_footer": true,
+    "items_per_page": 50
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/aqualog.log",
+    "max_size_mb": 10,
+    "backup_count": 5
+  }
+}

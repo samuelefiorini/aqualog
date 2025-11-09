@@ -159,7 +159,7 @@ cython_debug/
 .idea/
 
 # Streamlit
-.streamlit/
+# .streamlit/
 
 # DuckDB database files
 #*.duckdb
