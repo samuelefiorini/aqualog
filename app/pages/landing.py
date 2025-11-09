@@ -51,7 +51,7 @@ def create_kpi_display(stats):
 
     with col4:
         st.metric(
-            label="💾 Database Size",
+            label=":material/save: Database Size",
             value=f"{stats.database_size_mb:.1f} MB",
             help="Current size of the database file",
         )
@@ -109,7 +109,7 @@ def show_error_fallback():
         st.metric(":material/aq_indoor: Indoor Trials", "--")
 
     with col4:
-        st.metric("💾 Database Size", "-- MB")
+        st.metric(":material/save: Database Size", "-- MB")
 
 
 def show_landing_page():

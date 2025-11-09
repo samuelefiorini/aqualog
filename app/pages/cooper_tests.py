@@ -353,9 +353,6 @@ def create_diving_vs_surface_chart(df):
         },
     )
 
-    # Remove the title since it's handled by Streamlit
-    fig.update_layout(title=None)
-
     # Calculate linear regression statistics for all data
     import numpy as np
     from scipy import stats
@@ -704,7 +701,7 @@ def show_cooper_tests_page():
 
                 with col1:
                     st.metric(
-                        label="🤿 Median Diving Time",
+                        label=":material/head_mounted_device: Median Diving Time",
                         value=f"{latest_diving_median:.1f}s",
                         delta=f"{diving_delta:+.1f}s",
                         delta_color="inverse",  # Lower diving time is better, so inverse colors
@@ -713,7 +710,7 @@ def show_cooper_tests_page():
 
                 with col2:
                     st.metric(
-                        label="🫁 Median Surface Time",
+                        label=":material/pulmonology: Median Surface Time",
                         value=f"{latest_surface_median:.1f}s",
                         delta=f"{surface_delta:+.1f}s",
                         delta_color="inverse",  # Lower surface time is better (faster recovery)
@@ -727,11 +724,11 @@ def show_cooper_tests_page():
                     )
                 elif diving_delta < -1 or surface_delta < -1:
                     st.success(
-                        "🎉 Great improvement! Times have decreased, indicating better performance."
+                        ":material/celebration: Great improvement! Times have decreased, indicating better performance."
                     )
                 elif diving_delta > 1 or surface_delta > 1:
                     st.warning(
-                        "⚠️ Performance may have declined. Consider reviewing training approach."
+                        ":material/warning: Performance may have declined. Consider reviewing training approach."
                     )
 
         # Diving vs Surface time relationship
