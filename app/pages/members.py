@@ -100,7 +100,7 @@ def show_members_statistics(members):
     if not members:
         return
 
-    st.subheader("📊 Registry Statistics")
+    st.subheader(":material/analytics: Registry Statistics")
 
     col1, col2, col3, col4 = st.columns(4)
 
@@ -167,8 +167,8 @@ def show_error_fallback():
 
 def show_members_page():
     """Display the members registry page."""
-    st.title("👥 Members Registry")
-    st.markdown("---")
+    st.title(":material/group: Members Registry")
+    st.divider()
 
     try:
         # Load members data with caching
@@ -181,7 +181,7 @@ def show_members_page():
         # Show statistics
         show_members_statistics(members)
 
-        st.markdown("---")
+        st.divider()
 
         # Convert to DataFrame for display
         df = format_members_dataframe(members)
@@ -191,7 +191,7 @@ def show_members_page():
             return
 
         # Search and filter controls
-        st.subheader("🔍 Member Search & Filter")
+        st.subheader(":material/search: Member Search & Filter")
 
         col1, col2 = st.columns([2, 1])
 
@@ -252,7 +252,7 @@ def show_members_page():
             st.caption(f"Showing all {len(filtered_df)} members")
 
         # Display the members table
-        st.subheader("📋 Member Registry")
+        st.subheader(":material/data_exploration: Member Registry")
 
         if filtered_df.empty:
             st.info(f"No members found matching '{search_term}'")
@@ -288,23 +288,30 @@ def show_members_page():
             )
 
         # Additional actions
-        st.markdown("---")
+        st.divider()
 
         col1, col2, col3 = st.columns([1, 1, 2])
 
         with col1:
-            if st.button("🔄 Refresh Data", help="Reload member data from database"):
+            if st.button(
+                ":material/refresh: Refresh Data",
+                help="Reload member data from database",
+            ):
                 st.cache_data.clear()
                 st.rerun()
 
         with col2:
             # Export functionality (placeholder for future implementation)
             st.button(
-                "📥 Export CSV", disabled=True, help="Export functionality coming soon"
+                ":material/download: Export CSV",
+                disabled=True,
+                help="Export functionality coming soon",
             )
 
         with col3:
-            st.caption("💡 Use the search box to quickly find specific members")
+            st.caption(
+                ":material/lightbulb: Use the search box to quickly find specific members"
+            )
 
     except Exception as e:
         logger.error(f"Members page error: {e}")

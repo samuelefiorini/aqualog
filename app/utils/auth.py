@@ -9,6 +9,7 @@ from typing import Optional
 from loguru import logger
 from app.auth.db_auth import get_db_auth_manager
 from db.models import DashboardUser
+from app.utils.config import FOOTER
 
 
 class AuthenticationError(Exception):
@@ -160,8 +161,8 @@ class AuthManager:
 
     def show_login_form(self) -> None:
         """Display the login form."""
-        st.title("🏊‍♂️ Aqualog - Login")
-        st.markdown("---")
+        st.title(":material/login: Aqualog - Login")
+        st.divider()
 
         # Login form
         with st.form("login_form"):
@@ -174,7 +175,7 @@ class AuthManager:
 
             col1, col2, col3 = st.columns([1, 1, 1])
             with col2:
-                login_button = st.form_submit_button("🔑 Login")
+                login_button = st.form_submit_button(":material/login: Login")
 
             if login_button:
                 if not username or not password:
@@ -187,10 +188,10 @@ class AuthManager:
                         st.error("Invalid username or password.")
 
         # Information section
-        st.markdown("---")
+        st.divider()
 
         # User roles information
-        with st.expander("👥 User Roles"):
+        with st.expander(":material/group: User Roles"):
             st.info("""
             **Administrator:**
             - Full read and write access
@@ -201,11 +202,15 @@ class AuthManager:
             - Read-only access
             - Can view data and reports
             - Cannot modify data
+                    
+            **Default Credentials:**
+            - Username: `user`
+            - Password: `aqualog2025`
             """)
 
         # Footer
-        st.markdown("---")
-        st.caption("Aqualog - Freediving Society Management System")
+        st.divider()
+        st.caption(FOOTER)
 
 
 # Global authentication manager instance

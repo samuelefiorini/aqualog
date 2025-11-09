@@ -182,7 +182,7 @@ def stats(
 
             # Basic stats
             basic = stats_data.get("basic_stats", {})
-            typer.echo(f"\n📈 Basic Statistics:")
+            typer.echo(f"\n:material/bid_landscape: Basic Statistics:")
             typer.echo(f"  Members: {basic.get('total_members', 0)}")
             typer.echo(f"  Cooper Tests: {basic.get('total_cooper_tests', 0)}")
             typer.echo(f"  Indoor Trials: {basic.get('total_indoor_trials', 0)}")
@@ -232,7 +232,7 @@ def stats(
             # Performance summary
             performance = stats_data.get("performance_summary", {})
             if performance:
-                typer.echo(f"\n🏆 Performance Summary:")
+                typer.echo(f"\n:material/trophy: Performance Summary:")
                 typer.echo(
                     f"  Most Active Member: {performance.get('most_active_member', 'N/A')}"
                 )

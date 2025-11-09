@@ -8,7 +8,7 @@ The project is for a **small Italian freediving society** and will serve as an i
 
 ---
 
-### 🎯 Project Overview
+### :material/target: Project Overview
 
 You must create a **Streamlit web application** backed by a **DuckDB database** stored as a single `.duckdb` file (later backed up externally).
 Since no real data exists yet, the database will be populated with **synthetic data** generated via **Faker**.

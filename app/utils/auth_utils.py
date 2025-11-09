@@ -131,11 +131,11 @@ def show_auth_sidebar() -> None:
 
     if auth_manager.is_authenticated():
         with st.sidebar:
-            st.markdown("---")
+            st.divider()
             st.subheader("🔐 Authentication")
             st.success(f"Logged in as: **{auth_manager.get_current_user()}**")
 
-            if st.button("logout Logout", key="sidebar_logout"):
+            if st.button(":material/logout: Logout", key="sidebar_logout"):
                 auth_manager.logout()
                 st.rerun()
 
@@ -150,10 +150,10 @@ def show_auth_header() -> None:
         col1, col2, col3 = st.columns([2, 1, 1])
 
         with col2:
-            st.write(f"👤 **{auth_manager.get_current_user()}**")
+            st.write(f":material/user:**{auth_manager.get_current_user()}**")
 
         with col3:
-            if st.button("logout Logout", key="header_logout"):
+            if st.button(":material/logout: Logout", key="header_logout"):
                 auth_manager.logout()
                 st.rerun()
 

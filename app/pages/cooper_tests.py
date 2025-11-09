@@ -489,7 +489,7 @@ def show_cooper_tests_statistics(df):
     if df.empty:
         return
 
-    st.subheader("📊 Cooper Tests Statistics")
+    st.subheader(":material/analytics: Cooper Tests Statistics")
 
     col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -549,8 +549,8 @@ def show_error_fallback():
 
 def show_cooper_tests_page():
     """Display the Cooper tests analysis page."""
-    st.title("⏱️ Cooper Tests Analysis")
-    st.markdown("---")
+    st.title(":material/timer: Cooper Tests Analysis")
+    st.divider()
 
     try:
         # Load data with caching
@@ -570,10 +570,10 @@ def show_cooper_tests_page():
         # Show statistics
         show_cooper_tests_statistics(df)
 
-        st.markdown("---")
+        st.divider()
 
         # Filtering and member selection
-        st.subheader("🔍 Filters & Selection")
+        st.subheader(":material/search: Filters & Selection")
 
         col1, col2, col3 = st.columns([2, 1, 1])
 
@@ -632,8 +632,8 @@ def show_cooper_tests_page():
         st.caption(f"Showing {len(filtered_df)} test(s) matching your filters")
 
         # Performance trends visualization
-        st.markdown("---")
-        st.subheader("📈 Performance Trends Over Time")
+        st.divider()
+        st.subheader(":material/bid_landscape: Performance Trends Over Time")
 
         trends_chart = create_performance_trends_chart(filtered_df)
         if trends_chart:
@@ -671,7 +671,9 @@ def show_cooper_tests_page():
 
             # Show improvement KPIs below the chart if there are at least 2 tests
             if len(member_data) >= 2:
-                st.markdown("#### 📈 Performance Improvement (Last Two Tests)")
+                st.markdown(
+                    "#### :material/bid_landscape: Performance Improvement (Last Two Tests)"
+                )
 
                 # Sort by test date to get the most recent tests
                 member_data_sorted = member_data.sort_values("test_date")
@@ -720,7 +722,9 @@ def show_cooper_tests_page():
 
                 # Add interpretation
                 if abs(diving_delta) < 1 and abs(surface_delta) < 1:
-                    st.info("💡 Performance is stable - minimal changes between tests.")
+                    st.info(
+                        ":material/lightbulb: Performance is stable - minimal changes between tests."
+                    )
                 elif diving_delta < -1 or surface_delta < -1:
                     st.success(
                         "🎉 Great improvement! Times have decreased, indicating better performance."
@@ -731,8 +735,8 @@ def show_cooper_tests_page():
                     )
 
         # Diving vs Surface time relationship
-        st.markdown("---")
-        st.subheader("🔄 Diving vs Surface Time Relationship")
+        st.divider()
+        st.subheader(":material/refresh: Diving vs Surface Time Relationship")
 
         relationship_chart = create_diving_vs_surface_chart(filtered_df)
         if relationship_chart:
@@ -740,8 +744,8 @@ def show_cooper_tests_page():
 
         # Individual test session analysis
         if selected_member != "All Members":
-            st.markdown("---")
-            st.subheader("🎯 Individual Test Session Analysis")
+            st.divider()
+            st.subheader(":material/target: Individual Test Session Analysis")
 
             member_tests = filtered_df[filtered_df["member_name"] == selected_member]
 
@@ -795,8 +799,8 @@ def show_cooper_tests_page():
                     st.metric("Pool Length", f"{selected_test_data['pool_length']}m")
 
         # Data table
-        st.markdown("---")
-        st.subheader("📋 Cooper Tests Data")
+        st.divider()
+        st.subheader(":material/data_exploration: Cooper Tests Data")
 
         # Prepare display dataframe
         display_df = filtered_df[
@@ -836,24 +840,29 @@ def show_cooper_tests_page():
         st.dataframe(display_df, hide_index=True, height=300)
 
         # Additional actions
-        st.markdown("---")
+        st.divider()
 
         col1, col2, col3 = st.columns([1, 1, 2])
 
         with col1:
             if st.button(
-                "🔄 Refresh Data", help="Reload Cooper tests data from database"
+                ":material/refresh: Refresh Data",
+                help="Reload Cooper tests data from database",
             ):
                 st.cache_data.clear()
                 st.rerun()
 
         with col2:
             st.button(
-                "📥 Export Data", disabled=True, help="Export functionality coming soon"
+                ":material/download: Export Data",
+                disabled=True,
+                help="Export functionality coming soon",
             )
 
         with col3:
-            st.caption("💡 Use filters to focus on specific members or time periods")
+            st.caption(
+                ":material/lightbulb: Use filters to focus on specific members or time periods"
+            )
 
     except Exception as e:
         logger.error(f"Cooper tests page error: {e}")

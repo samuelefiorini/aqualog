@@ -353,7 +353,7 @@ def show_indoor_trials_statistics(df):
     if df.empty:
         return
 
-    st.subheader("📊 Indoor Trials Statistics")
+    st.subheader(":material/analytics: Indoor Trials Statistics")
 
     col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -418,8 +418,8 @@ def show_error_fallback():
 
 def show_indoor_trials_page():
     """Display the indoor trials analysis page."""
-    st.title("🏋️ Indoor Trials Analysis")
-    st.markdown("---")
+    st.title(":material/aq_indoor: Indoor Trials Analysis")
+    st.divider()
 
     try:
         # Load data with caching
@@ -439,10 +439,10 @@ def show_indoor_trials_page():
         # Show statistics
         show_indoor_trials_statistics(df)
 
-        st.markdown("---")
+        st.divider()
 
         # Filtering and member selection
-        st.subheader("🔍 Filters & Selection")
+        st.subheader(":material/search: Filters & Selection")
 
         col1, col2, col3 = st.columns([2, 1, 1])
 
@@ -503,16 +503,16 @@ def show_indoor_trials_page():
         st.caption(f"Showing {len(filtered_df)} trial(s) matching your filters")
 
         # Performance trends visualization
-        st.markdown("---")
-        st.subheader("📈 Indoor Trials Performance Analysis")
+        st.divider()
+        st.subheader(":material/bid_landscape: Indoor Trials Performance Analysis")
 
         trends_chart = create_performance_trends_chart(filtered_df)
         if trends_chart:
             st.plotly_chart(trends_chart)
 
         # Distance vs Time relationship (only for trials with time data)
-        st.markdown("---")
-        st.subheader("⏱️ Distance vs Time Performance")
+        st.divider()
+        st.subheader(":material/timer: Distance vs Time Performance")
 
         trials_with_time = filtered_df["time_seconds"].notna().sum()
         if trials_with_time > 0:
@@ -524,8 +524,8 @@ def show_indoor_trials_page():
                 )
 
             # Speed and distance distributions
-            st.markdown("---")
-            st.subheader("📊 Speed & Distance Distributions")
+            st.divider()
+            st.subheader(":material/analytics: Speed & Distance Distributions")
             speed_dist_chart = create_speed_distance_distribution_chart(
                 filtered_df, selected_member
             )
@@ -535,8 +535,8 @@ def show_indoor_trials_page():
             st.info("No trials with time data available for distance vs time analysis.")
 
         # Data table
-        st.markdown("---")
-        st.subheader("📋 Indoor Trials Data")
+        st.divider()
+        st.subheader(":material/data_exploration: Indoor Trials Data")
 
         # Prepare display dataframe
         display_df = filtered_df[
@@ -592,25 +592,28 @@ def show_indoor_trials_page():
         )
 
         # Additional actions
-        st.markdown("---")
+        st.divider()
 
         col1, col2, col3 = st.columns([1, 1, 2])
 
         with col1:
             if st.button(
-                "🔄 Refresh Data", help="Reload indoor trials data from database"
+                ":material/refresh: Refresh Data",
+                help="Reload indoor trials data from database",
             ):
                 st.cache_data.clear()
                 st.rerun()
 
         with col2:
             st.button(
-                "📥 Export CSV", disabled=True, help="Export functionality coming soon"
+                ":material/download: Export CSV",
+                disabled=True,
+                help="Export functionality coming soon",
             )
 
         with col3:
             st.caption(
-                "💡 Use filters to focus on specific members, dates, or pool lengths"
+                ":material/lightbulb: Use filters to focus on specific members, dates, or pool lengths"
             )
 
     except Exception as e:

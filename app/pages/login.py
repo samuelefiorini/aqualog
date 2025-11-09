@@ -29,13 +29,13 @@ def main():
 
         col1, col2, col3 = st.columns([1, 1, 1])
         with col2:
-            if st.button("🚪 Logout", type="secondary"):
+            if st.button(":material/logout: Logout", type="secondary"):
                 auth_manager.logout()
                 st.rerun()
 
         # Show available pages
-        st.markdown("---")
-        st.subheader("📄 Available Pages")
+        st.divider()
+        st.subheader(":material/docs: Available Pages")
         st.markdown("""
         - **Dashboard** - View system statistics and overview
         - **Members** - Browse the member registry

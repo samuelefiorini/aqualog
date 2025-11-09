@@ -3,7 +3,7 @@
 
 -- Members table - stores information about freediving society members
 CREATE TABLE IF NOT EXISTS members (
-    id INTEGER,
+    id INTEGER PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     surname VARCHAR(100) NOT NULL,
     date_of_birth DATE NOT NULL,
@@ -14,33 +14,31 @@ CREATE TABLE IF NOT EXISTS members (
 
 -- Cooper tests table - stores 12-minute Cooper test results with diving/surface cycles
 CREATE TABLE IF NOT EXISTS cooper_tests (
-    id INTEGER,
-    member_id INTEGER NOT NULL,
+    id INTEGER PRIMARY KEY,
+    member_id INTEGER REFERENCES members(id),
     test_date DATE NOT NULL,
     diving_times TIME[] NOT NULL,     -- Array of diving times for each cycle
     surface_times TIME[] NOT NULL,    -- Array of surface times for each cycle
     pool_length_meters INTEGER NOT NULL, -- Swimming pool length (e.g., 25m, 50m)
     notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (member_id) REFERENCES members(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indoor trials table - stores indoor training session results
 CREATE TABLE IF NOT EXISTS indoor_trials (
-    id INTEGER,
-    member_id INTEGER NOT NULL,
+    id INTEGER PRIMARY KEY,    
+    member_id INTEGER REFERENCES members(id),
     trial_date DATE NOT NULL,
     location VARCHAR(255),
     distance_meters INTEGER NOT NULL,
     time_seconds INTEGER,  -- Optional: sometimes only distance is tracked
     pool_length_meters INTEGER NOT NULL, -- Swimming pool length (e.g., 25m, 50m)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (member_id) REFERENCES members(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Dashboard users table with encrypted credentials
 CREATE TABLE IF NOT EXISTS dashboard_users (
-    id INTEGER,
+    id INTEGER PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(128) NOT NULL,  -- Encrypted password hash
     salt VARCHAR(32) NOT NULL,            -- Unique salt for each user

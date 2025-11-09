@@ -42,8 +42,7 @@ cd aqualog
 
 2. Install dependencies with uv:
 ```bash
-uv sync
-uv pip install cryptography>=41.0.0
+uv pip install -r requirements.txt
 ```
 
 3. Initialize the database:
@@ -69,7 +68,7 @@ streamlit run main.py
 - **Password**: `aqualog2024`
 - **Role**: Administrator
 
-## 📋 Usage
+## :material/data_exploration: Usage
 
 ### CLI for Data Management
 

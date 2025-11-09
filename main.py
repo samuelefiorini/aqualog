@@ -12,6 +12,8 @@ from app.pages.cooper_tests import show_cooper_tests_page
 from app.pages.indoor_trials import show_indoor_trials_page
 from app.pages.admin_panel import show_admin_panel_page
 
+from app.utils.config import TITLE
+
 # Simple page configuration without custom CSS
 
 # Configure page
@@ -97,11 +99,11 @@ def main():
     pg = st.navigation(pages)
 
     # Add header with user info and logout
-    st.title("🏊‍♂️ Aqualog - Freediving Management System")
+    st.title(TITLE)
 
     # Sidebar with user info and logout
     with st.sidebar:
-        st.markdown("---")
+        st.divider()
 
         # Enhanced user info with proper emoji and styling
         if user.is_admin:
@@ -109,14 +111,14 @@ def main():
             st.markdown(f"**{user.display_name}**")
             st.caption("Full system access")
         else:
-            st.markdown("### 👤 User")
+            st.markdown("### :material/account_box: User")
             st.markdown(f"**{user.display_name}**")
             st.caption("Read-only access")
 
-        st.markdown("---")
+        st.divider()
 
         # Logout button in sidebar
-        if st.button("🚪 Logout", type="secondary"):
+        if st.button(":material/logout: Logout", type="secondary"):
             auth_manager.logout()
             st.rerun()
 
@@ -124,10 +126,8 @@ def main():
     pg.run()
 
     # Footer
-    st.markdown("---")
-    st.caption(
-        f"🏊‍♂️ Aqualog - Freediving Society Management System | Logged in as {user.username}"
-    )
+    st.divider()
+    st.caption(f"{TITLE} | Logged in as {user.username}")
 
 
 if __name__ == "__main__":

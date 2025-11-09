@@ -22,7 +22,7 @@ def show_admin_panel_page():
     user = auth_manager.get_current_user()
 
     st.title("⚙️ Admin Panel")
-    st.markdown("---")
+    st.divider()
 
     # Placeholder content for now
     st.info(

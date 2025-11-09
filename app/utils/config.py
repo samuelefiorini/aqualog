@@ -9,6 +9,9 @@ from typing import Dict, Any, Optional
 import json
 from loguru import logger
 
+TITLE = ":material/head_mounted_device: Aqualog"
+FOOTER = ":material/head_mounted_device: Aqualog | Project repository: [link](https://github.com/samuelefiorini/aqualog)"
+
 
 class Config:
     """Application configuration manager."""
@@ -194,7 +197,7 @@ def create_default_credentials() -> None:
             # Hash default password
             import hashlib
 
-            default_password_hash = hashlib.sha256("admin123".encode()).hexdigest()
+            default_password_hash = hashlib.sha256("aqualog2025".encode()).hexdigest()
 
             default_credentials = {
                 "credentials": {"admin": default_password_hash},
