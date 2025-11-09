@@ -162,9 +162,9 @@ cython_debug/
 .streamlit/
 
 # DuckDB database files
-*.duckdb
-*.duckdb.wal
-data/
+#*.duckdb
+#*.duckdb.wal
+#data/
 
 # Application specific
 logs/

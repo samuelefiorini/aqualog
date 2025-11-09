@@ -133,7 +133,7 @@ def show_members_statistics(members):
 
 def show_empty_state():
     """Display empty state when no members are found."""
-    st.info("📭 No members found in the registry")
+    st.info(":material/inbox: No members found in the registry")
 
     st.markdown("""
     **Possible reasons:**

@@ -84,7 +84,7 @@ class DatabaseAuthManager:
             # Create default admin user
             self.create_user(
                 username="admin",
-                password="admin123",
+                password="aqualog2025",
                 role="admin",
                 full_name="System Administrator",
                 email="admin@aqualog.local",

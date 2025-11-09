@@ -512,7 +512,7 @@ def show_cooper_tests_statistics(df):
 
 def show_empty_state():
     """Display empty state when no Cooper tests are found."""
-    st.info("📭 No Cooper tests found in the database")
+    st.info(":material/inbox: No Cooper tests found in the database")
 
     st.markdown("""
     **Possible reasons:**

@@ -21,10 +21,10 @@ def show_admin_panel_page():
 
     user = auth_manager.get_current_user()
 
-    st.title("⚙️ Admin Panel")
+    st.title(":material/admin_panel_settings: Admin Panel")
     st.divider()
 
     # Placeholder content for now
     st.info(
-        "🚧 Admin Panel is under construction. This will provide user management, backups, and system configuration."
+        ":material/forklift: Admin Panel is under construction. This will provide user management, backups, and system configuration."
     )

@@ -11,20 +11,22 @@ from app.pages.members import show_members_page
 from app.pages.cooper_tests import show_cooper_tests_page
 from app.pages.indoor_trials import show_indoor_trials_page
 from app.pages.admin_panel import show_admin_panel_page
+from app.auth.db_auth import get_db_auth_manager
 
 from app.utils.config import TITLE
+from loguru import logger
 
 # Simple page configuration without custom CSS
 
 # Configure page
 st.set_page_config(
     page_title="Aqualog - Freediving Management",
-    page_icon=":material/pool:",
+    page_icon=":material/head_mounted_device:",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        "Get Help": "https://github.com/your-repo/aqualog",
-        "Report a bug": "https://github.com/your-repo/aqualog/issues",
+        "Get Help": "https://github.com/samuelefiorini/aqualog?tab=readme-ov-file#%E2%80%8D%EF%B8%8F-aqualog---freediving-society-management-system",
+        "Report a bug": "https://github.com/samuelefiorini/aqualog/issues",
         "About": "Aqualog - Freediving Society Management System v1.0",
     },
 )
@@ -107,7 +109,7 @@ def main():
 
         # Enhanced user info with proper emoji and styling
         if user.is_admin:
-            st.markdown("### 👑 Administrator")
+            st.markdown("### :material/crown: Administrator")
             st.markdown(f"**{user.display_name}**")
             st.caption("Full system access")
         else:

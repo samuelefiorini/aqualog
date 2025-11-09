@@ -384,7 +384,7 @@ def show_indoor_trials_statistics(df):
 
 def show_empty_state():
     """Display empty state when no indoor trials are found."""
-    st.info("📭 No indoor trials found in the database")
+    st.info(":material/inbox: No indoor trials found in the database")
 
     st.markdown("""
     **Possible reasons:**

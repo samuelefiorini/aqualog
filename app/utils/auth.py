@@ -4,7 +4,6 @@ Provides authentication using encrypted credentials stored in DuckDB.
 """
 
 import streamlit as st
-import time
 from typing import Optional
 from loguru import logger
 from app.auth.db_auth import get_db_auth_manager

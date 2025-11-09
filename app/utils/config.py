@@ -5,9 +5,10 @@ Manages application settings, authentication, and environment variables.
 
 import os
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 import json
 from loguru import logger
+
 
 TITLE = ":material/head_mounted_device: Aqualog"
 FOOTER = ":material/head_mounted_device: Aqualog | Project repository: [link](https://github.com/samuelefiorini/aqualog)"
