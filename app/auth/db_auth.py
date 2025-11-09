@@ -89,7 +89,7 @@ class DatabaseAuthManager:
                 full_name="System Administrator",
                 email="admin@aqualog.local",
             )
-            logger.info("Created default admin user (admin/admin123)")
+            logger.info("Created default admin user (admin/aqualog2025)")
 
         except Exception as e:
             logger.error(f"Failed to create default admin user: {e}")

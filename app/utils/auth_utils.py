@@ -132,7 +132,7 @@ def show_auth_sidebar() -> None:
     if auth_manager.is_authenticated():
         with st.sidebar:
             st.divider()
-            st.subheader("🔐 Authentication")
+            st.subheader(":material/fingerprint: Authentication")
             st.success(f"Logged in as: **{auth_manager.get_current_user()}**")
 
             if st.button(":material/logout: Logout", key="sidebar_logout"):

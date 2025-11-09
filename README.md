@@ -62,10 +62,10 @@ streamlit run main.py
 
 6. Open browser at `http://localhost:8501`
 
-### 🔐 Default Credentials
+### :material/fingerprint: Default Credentials
 
 - **Username**: `admin`
-- **Password**: `aqualog2024`
+- **Password**: `aqualog2025`
 - **Role**: Administrator
 
 ## :material/data_exploration: Usage
@@ -247,7 +247,7 @@ Configure via `.streamlit/config.json`:
 - Performance and caching options
 - UI customization
 
-### 🔐 Security
+### :material/fingerprint: Security
 
 - **Encryption**: Passwords encrypted with Fernet (AES-128)
 - **Hashing**: SHA-256 with unique user salts

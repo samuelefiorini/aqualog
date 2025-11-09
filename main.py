@@ -11,10 +11,10 @@ from app.pages.members import show_members_page
 from app.pages.cooper_tests import show_cooper_tests_page
 from app.pages.indoor_trials import show_indoor_trials_page
 from app.pages.admin_panel import show_admin_panel_page
-from app.auth.db_auth import get_db_auth_manager
+
 
 from app.utils.config import TITLE
-from loguru import logger
+
 
 # Simple page configuration without custom CSS
 
