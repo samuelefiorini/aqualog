@@ -61,14 +61,6 @@ def show_welcome_message():
     """Display friendly welcome message and navigation hints."""
     st.title(":material/analytics: Aqualog Dashboard")
 
-    st.markdown("""
-    ### Your Freediving Society Management System
-    
-    Welcome to Aqualog, the comprehensive management system for your Italian freediving society. 
-    Here you can track member information, analyze Cooper test performance, and monitor indoor 
-    training progress.
-    """)
-
     # Navigation hints
     st.info("""
     **:material/explore: Navigation Guide:**
