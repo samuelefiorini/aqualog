@@ -15,7 +15,7 @@ def show_admin_panel_page():
 
     # Check if user is admin (this will show error if not)
     if not auth_manager.is_admin():
-        st.error("🚫 Access Denied: Administrator privileges required")
+        st.error(":material/block: Access Denied: Administrator privileges required")
         st.info("Contact your administrator to access this page.")
         return
 

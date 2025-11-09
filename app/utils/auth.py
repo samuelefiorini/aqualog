@@ -132,7 +132,9 @@ class AuthManager:
             return False
 
         if not self.is_admin():
-            st.error("🚫 Access Denied: Administrator privileges required")
+            st.error(
+                ":material/block: Access Denied: Administrator privileges required"
+            )
             st.info("Contact your administrator to access this page.")
             st.stop()
 
@@ -150,7 +152,7 @@ class AuthManager:
             return False
 
         if not self.can_write():
-            st.error("🚫 Access Denied: Write permissions required")
+            st.error(":material/block: Access Denied: Write permissions required")
             st.info(
                 "You have read-only access. Contact your administrator for write permissions."
             )
